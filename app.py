@@ -12,10 +12,14 @@ app = Flask(__name__)
 app.secret_key = secrets.token_hex(16)
 
 # MySQL Configuration
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'Radhey2005@'
-app.config['MYSQL_DB'] = 'mental_wellness_db'
+
+import os
+
+app.config['MYSQL_HOST'] = os.environ.get('DB_HOST')
+app.config['MYSQL_USER'] = os.environ.get('DB_USER')
+app.config['MYSQL_PASSWORD'] = os.environ.get('DB_PASSWORD')
+app.config['MYSQL_DB'] = os.environ.get('DB_NAME')
+app.config['MYSQL_PORT'] = int(os.environ.get('DB_PORT', 3306))
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 mysql = MySQL(app)
@@ -359,4 +363,4 @@ def internal_error(e):
     return render_template('500.html', user=get_current_user()), 500
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
