@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Mental Health AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Inherited from homepage */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1498855926480-d98e83099315?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center/cover;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navigation - Same as homepage */
+        nav {
+            background: linear-gradient(135deg, #6a5acd, #483d8b);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .logo span {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(to right, #ffffff, #ffcc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Main Content */
+        .auth-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 100px 20px 50px;
+        }
+
+        .auth-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            animation: fadeIn 0.8s ease;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-header h2 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #ffffff, #ffcc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .auth-header p {
+            color: rgba(255,255,255,0.8);
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: white;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #ffcc00;
+            background: rgba(255,255,255,0.15);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #ff9800, #ff6600);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255,152,0,0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255,152,0,0.4);
+            background: linear-gradient(45deg, #ff6600, #ff9800);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 25px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .auth-footer a {
+            color: #ffcc00;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+        }
+
+        .alert-success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            color: #d4edda;
+        }
+
+        .alert-danger {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            color: #f8d7da;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .auth-box {
+                padding: 30px;
+            }
+            
+            .auth-header h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-box {
+                padding: 25px 20px;
+            }
+            
+            .form-control {
+                padding: 12px 15px;
+            }
+            
+            .btn {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation (Same as homepage) -->
+    <nav>
+        <div class="logo">
+            <img src="https://img.icons8.com/ios/100/000000/melting-ice-cream.png" alt="Mental Health AI Logo">
+            <span>Mental Health AI</span>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}"><i class="fa-solid fa-house"></i> <span>Home</span></a>
+            <a href="{{ url_for('login') }}"><i class="fa-solid fa-right-to-bracket"></i> <span>Login</span></a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="auth-container">
+        <div class="auth-box">
+            <div class="auth-header">
+                <h2>Create Account</h2>
+                <p>Begin your mental wellness journey with us</p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('register') }}">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Create a password" required>
+                </div>
+                
+                <button type="submit" class="btn">Register</button>
+            </form>
+            
+            <div class="auth-footer">
+                Already have an account? <a href="{{ url_for('login') }}">Sign in here</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

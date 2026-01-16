@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Companion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Flash Messages */
+        .flash-messages {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            z-index: 1100;
+            max-width: 400px;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border-left: 5px solid #28a745;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left: 5px solid #dc3545;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border-left: 5px solid #ffc107;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border-left: 5px solid #17a2b8;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Navigation Bar */
+        nav {
+            background: linear-gradient(135deg, #2c0a4f, #2c0a4f);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .logo span {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(to right, #ffffff, #ffcc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: #ffcc00;
+            transform: translateY(-2px);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #ffcc00;
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Notification Bell Animation */
+        .fa-bell {
+            animation: bell-shake 1.5s infinite alternate;
+            transform-origin: top center;
+        }
+
+        @keyframes bell-shake {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            50% { transform: rotate(-10deg); }
+            75% { transform: rotate(5deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        /* Enhanced Search Styles */
+        .search-container {
+            position: relative;
+        }
+
+        .search-bar {
+            position: absolute;
+            right: 0;
+            top: 40px;
+            width: 300px;
+            display: none;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.15);
+            z-index: 100;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .search-bar.active {
+            display: block;
+        }
+
+        .search-input-container {
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 2px solid #000000;
+            border-radius: 30px;
+            font-family: 'Poppins', sans-serif;
+            outline: none;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .search-bar input:focus {
+            border-color: #6a5acd;
+            box-shadow: 0 0 10px rgba(106, 90, 205, 0.3);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6a5acd;
+        }
+
+        .search-results {
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .search-result-item {
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .search-result-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .search-result-item i {
+            margin-right: 10px;
+            color: #6a5acd;
+        }
+
+        .search-result-item .result-text {
+            flex: 1;
+        }
+
+        .search-result-item .result-category {
+            font-size: 0.8rem;
+            color: #888;
+            margin-left: 10px;
+        }
+
+        .no-results {
+            padding: 10px;
+            color: #666;
+            text-align: center;
+        }
+
+        .search-result-item.highlighted {
+            background-color: #e6e6fa;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1498855926480-d98e83099315?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center/cover;
+            color: white;
+            position: relative;
+            margin-top: 70px; /* To account for fixed nav */
+        }
+
+        .hero-content {
+            max-width: 800px;
+            animation: slideUp 1s ease;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .get-started-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            background: linear-gradient(45deg, #ff9800, #ff6600);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(255,152,0,0.3);
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .get-started-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255,152,0,0.4);
+            background: linear-gradient(45deg, #ff6600, #ff9800);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 5%;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: #6a5acd;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 4px;
+            background: linear-gradient(to right, #6a5acd, #ff9800);
+            bottom: -10px;
+            left: 25%;
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature-box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid rgba(106, 90, 205, 0.1);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .feature-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #6a5acd, #ff9800);
+            transition: height 0.3s ease;
+            z-index: -1;
+        }
+
+        .feature-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        .feature-box:hover::before {
+            height: 100%;
+        }
+
+        .feature-box a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .feature-box i {
+            font-size: 50px;
+            margin-bottom: 20px;
+            color: #6a5acd;
+            transition: all 0.3s ease;
+        }
+
+        .feature-box:hover i {
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .feature-box h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        .feature-box:hover h3 {
+            color: white;
+        }
+
+        .feature-box p {
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .feature-box:hover p {
+            color: rgba(255,255,255,0.9);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 50px 5% 30px;
+            background: linear-gradient(135deg, #2c0a4f, #2c0a4f);
+            color: white;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #ffffff, #ffcc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #ffcc00;
+            transform: translateY(-3px);
+        }
+
+        .social-icons {
+            margin-bottom: 30px;
+        }
+
+        .social-icons a {
+            display: inline-block;
+            width: 45px;
+            height: 45px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            margin: 0 10px;
+            color: white;
+            font-size: 1.2rem;
+            line-height: 45px;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background: #ffcc00;
+            color: #6a5acd;
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 20px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feature-box {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px 20px;
+            }
+            
+            .nav-links a {
+                margin: 0 10px;
+                font-size: 16px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-bar {
+                width: 250px;
+                right: -50px;
+            }
+
+            .flash-messages {
+                top: 80px;
+                right: 10px;
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .get-started-btn {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+            
+            .feature-box {
+                padding: 20px;
+            }
+            
+            .nav-links a {
+                margin: 0 5px;
+                font-size: 14px;
+            }
+
+            .nav-links a span {
+                display: none;
+            }
+
+            .nav-links a i {
+                margin-right: 0;
+            }
+
+            .search-bar {
+                width: 200px;
+                right: -30px;
+            }
+
+            .flash-messages {
+                top: 70px;
+                right: 5px;
+                max-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo">
+            <img src="https://img.icons8.com/ios/100/000000/melting-ice-cream.png" alt="Mental Health Logo">
+            <span>Mental Health Companion</span>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}"><i class="fa-solid fa-house"></i> <span>Home</span></a>
+            {% if 'user_id' in session %}
+                <a href="{{ url_for('notification') }}"><i class="fa-solid fa-bell"></i> <span>Notifications</span></a>
+            {% endif %}
+            <div class="search-container">
+                <a href="#" id="search-toggle"><i class="fa-solid fa-magnifying-glass"></i> <span>Search</span></a>
+                <div class="search-bar" id="search-bar">
+                    <div class="search-input-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="search-input" placeholder="Search features, articles...">
+                    </div>
+                    <div class="search-results" id="search-results">
+                        <!-- Results will be inserted here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            {% if 'user_id' in session %}
+                <a href="{{ url_for('setting') }}"><i class="fa-solid fa-gear"></i> <span>Settings</span></a>
+            {% else %}
+                <a href="{{ url_for('login') }}"><i class="fa-solid fa-right-to-bracket"></i> <span>Login</span></a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Your Companion for Mental Wellness</h1>
+            <p>Track your mood, journal your thoughts, and connect with a supportive community in your journey to better mental health.</p>
+            <a href="#features" class="get-started-btn">
+                {% if 'user_id' in session %}
+                    Continue Your Journey
+                {% else %}
+                    Get Started
+                {% endif %}
+            </a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-title">
+            <h2>Our Features</h2>
+            <p>Discover how our companion can support your mental health journey</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-box">
+                <a href="{{ url_for('moodtracker') }}">
+                    <i class="fa-solid fa-heart"></i>
+                    <h3>Mood Tracker</h3>
+                    <p>
+                        {% if 'user_id' in session %}
+                            Continue tracking your mood patterns
+                        {% else %}
+                            Track your daily mood patterns
+                        {% endif %}
+                    </p>
+                </a>
+            </div>
+
+            <div class="feature-box">
+                <a href="{{ url_for('journaling') }}">
+                    <i class="fa-solid fa-book"></i>
+                    <h3>Journaling</h3>
+                    <p>
+                        {% if 'user_id' in session %}
+                            Add to your personal journal
+                        {% else %}
+                            Express your thoughts safely
+                        {% endif %}
+                    </p>
+                </a>
+            </div>
+
+            <div class="feature-box">
+                <a href="{{ url_for('community') }}">
+                    <i class="fa-solid fa-users"></i>
+                    <h3>Community</h3>
+                    <p>Connect with others who understand your journey</p>
+                </a>
+            </div>
+
+            <div class="feature-box">
+                <a href="{{ url_for('musictherapy') }}">
+                    <i class="fa-solid fa-music"></i>
+                    <h3>Music Therapy</h3>
+                    <p>Discover playlists to match your mood</p>
+                </a>
+            </div>
+
+            <div class="feature-box">
+                <a href="{{ url_for('games') }}">
+                    <i class="fa-solid fa-gamepad"></i>
+                    <h3>Therapeutic Games</h3>
+                    <p>Relaxing games to reduce stress</p>
+                </a>
+            </div>
+
+            <div class="feature-box">
+                <a href="{{ url_for('progress') }}">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <h3>Progress Tracking</h3>
+                    <p>
+                        {% if 'user_id' in session %}
+                            View your mental health progress
+                        {% else %}
+                            Visualize your journey
+                        {% endif %}
+                    </p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">Mental Health Companion</div>
+            
+            <div class="footer-links">
+                <a href="{{ url_for('aboutus1') }}">About Us</a>
+                <a href="{{ url_for('contactus') }}">Contact</a>
+                <a href="{{ url_for('privacypolicy') }}">Privacy Policy</a>
+                <a href="{{ url_for('termsofservice') }}">Terms of Service</a>
+            </div>
+            
+            <div class="social-icons">
+                <a href="https://www.instagram.com/your_mental_health_ai_buddy/?igsh=MXJ3anJncmxlMjNndg%3D%3D#"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.facebook.com/people/Yourmentalhealth-Aibuddy/pfbid02FVab7ZPWu16ESqkc5KtzoR8zYFUuB9sStrCfwracCFTH1bxDNmRjj7BQNMQ9QqbNl/?rdid=6MwvuysN3XtzAh6Q&share_url=https%253A%252F%252Fwww.facebook.com%252Fshare%252F16PNaZVL9y%252F"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://x.com/health_ai80115?t=dKxcCUiWyKO2wq4Raho_8A&s=08"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="https://www.linkedin.com/in/your-mental-health-ai-buddy-676866359?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            
+            <p class="copyright">© 2025 Mental Health Companion. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Search functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchToggle = document.getElementById('search-toggle');
+            const searchBar = document.getElementById('search-bar');
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('search-results');
+            
+            // Create a mapping of route names to URLs
+            const routeUrls = {
+                'moodtracker': "{{ url_for('moodtracker') }}",
+                'journaling': "{{ url_for('journaling') }}",
+                'community': "{{ url_for('community') }}",
+                'musictherapy': "{{ url_for('musictherapy') }}",
+                'games': "{{ url_for('games') }}",
+                'progress': "{{ url_for('progress') }}",
+                'setting': "{{ url_for('setting') }}",
+                'notification': "{{ url_for('notification') }}"
+            };
+
+            // Search data mapping to your Flask routes
+            const searchData = [
+                { title: "Mood Tracker", category: "Feature", icon: "heart", link: "moodtracker" },
+                { title: "Journaling", category: "Feature", icon: "book", link: "journaling" },
+                { title: "Community", category: "Feature", icon: "users", link: "community" },
+                { title: "Music Therapy", category: "Feature", icon: "music", link: "musictherapy" },
+                { title: "Therapeutic Games", category: "Feature", icon: "gamepad", link: "games" },
+                { title: "Progress Tracking", category: "Feature", icon: "chart-line", link: "progress" },
+                { title: "Settings", category: "Page", icon: "gear", link: "setting" },
+                { title: "Notifications", category: "Page", icon: "bell", link: "notification" }
+            ];
+
+            // Toggle search bar
+            searchToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                searchBar.classList.toggle('active');
+                if (searchBar.classList.contains('active')) {
+                    searchInput.focus();
+                }
+            });
+
+            // Close search when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchBar.contains(e.target) && e.target !== searchToggle && !searchToggle.contains(e.target)) {
+                    searchBar.classList.remove('active');
+                }
+            });
+
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                const results = searchData.filter(item => 
+                    item.title.toLowerCase().includes(query) || 
+                    item.category.toLowerCase().includes(query)
+                );
+                
+                displayResults(results);
+            });
+
+            // Display search results
+            function displayResults(results) {
+                if (searchInput.value.trim() === '') {
+                    searchResults.innerHTML = '';
+                    return;
+                }
+
+                if (results.length === 0) {
+                    searchResults.innerHTML = '<div class="no-results">No results found</div>';
+                    return;
+                }
+
+                searchResults.innerHTML = results.map(item => `
+                    <a href="${routeUrls[item.link]}" class="search-result-item">
+                        <i class="fas fa-${item.icon}"></i>
+                        <div class="result-text">${item.title}</div>
+                        <div class="result-category">${item.category}</div>
+                    </a>
+                `).join('');
+            }
+
+            // Close search when a result is clicked
+            searchResults.addEventListener('click', function(e) {
+                if (e.target.closest('.search-result-item')) {
+                    searchBar.classList.remove('active');
+                    searchInput.value = '';
+                    searchResults.innerHTML = '';
+                }
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

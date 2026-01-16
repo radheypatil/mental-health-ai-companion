@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health AI Companion | AI Mental Health Companion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --primary: #5d5fef;  /* Calm purple-blue */
+            --primary-dark: #4a4dcc;
+            --secondary: #6bd6e0; /* Soft teal */
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --accent: #ff6b6b; /* Warm accent */
+            --text: #333;
+            --text-light: #6c757d;
+            --shadow: 0 5px 15px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: #f5f7fa;
+            overflow-x: hidden;
+        }
+        
+        /* Navigation */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.5rem;
+            text-decoration: none;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            bottom: -5px;
+            left: 0;
+            transition: var(--transition);
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--primary);
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 10rem 5% 6rem;
+            text-align: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 300px;
+            height: 300px;
+            background: var(--secondary);
+            opacity: 0.2;
+            border-radius: 50%;
+            z-index: 0;
+        }
+        
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            opacity: 0.1;
+            border-radius: 50%;
+            z-index: 0;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 2.8rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 2.5rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            border: 2px solid var(--primary);
+            box-shadow: var(--shadow);
+        }
+        
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(93, 95, 239, 0.3);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            margin-left: 1rem;
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Sections */
+        section {
+            padding: 6rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--primary);
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 3px;
+            background: var(--secondary);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* About Project */
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+        }
+        
+        .about-img {
+            flex: 1;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .about-img:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .about-img img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: var(--transition);
+        }
+        
+        .about-img:hover img {
+            transform: scale(1.03);
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        .about-text h3 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .about-text p {
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+        }
+        
+        .about-text ul {
+            margin-bottom: 2rem;
+            padding-left: 1.5rem;
+        }
+        
+        .about-text li {
+            margin-bottom: 0.8rem;
+            color: var(--text-light);
+        }
+        
+        /* Creators */
+        .creators {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .creator-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            width: 300px;
+            transition: var(--transition);
+        }
+        
+        .creator-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .creator-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1.5rem;
+            border: 5px solid var(--light);
+            box-shadow: var(--shadow);
+        }
+        
+        .creator-card h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .creator-card p {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--light);
+            color: var(--primary);
+            transition: var(--transition);
+        }
+        
+        .social-links a:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+        
+        .feature-card p {
+            color: var(--text-light);
+        }
+        
+        /* Contact */
+        .contact-content {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .contact-content p {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+        
+        .contact-email {
+            display: inline-block;
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .contact-email:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 3rem 5%;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            color: var(--secondary);
+        }
+        
+        .copyright {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 2.4rem;
+            }
+            
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .about-img, .about-text {
+                flex: none;
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero {
+                padding: 8rem 5% 4rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .btn-group {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .btn-outline {
+                margin-left: 0;
+                margin-top: 1rem;
+            }
+            
+            section {
+                padding: 4rem 5%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .feature-card {
+                padding: 2rem;
+            }
+            
+            .creator-card {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <header>
+        <nav>
+            <a href="#" class="logo">
+                <img src="https://img.icons8.com/ios/100/000000/melting-ice-cream.png" alt="Logo">
+                Mental Health AI Companion
+            </a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="#about">About</a>
+                <a href="#features">Features</a>
+                <a href="#creators">Creators</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Your Compassionate Mental Health AI Companion</h1>
+            <p>Developed with care by students to provide 24/7 emotional support using advanced AI technology.</p>
+            <div class="btn-group">
+                <a href="#features" class="btn">Learn How It Works</a>
+                <a href="#about" class="btn btn-outline">About Our Project</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <h2 class="section-title">About Mental Health AI Companion</h2>
+        <div class="about-content">
+            <div class="about-img">
+                <img src="mental-health-logo-design-template-6c9a93ed91d0fbfa3e6c61f659fd4509_screen.jpg" alt="Mental Health AI Companion">
+            </div>
+            <div class="about-text">
+                <h3>Student Project Developed in 2025</h3>
+                <p>Mental Health AI Companion is an AI-powered mental health companion created as part of our academic journey. It combines natural language processing with psychological principles to offer accessible mental health support.</p>
+                <ul>
+                    <li><i class="fas fa-check-circle" style="color: var(--primary); margin-right: 8px;"></i> Non-judgmental emotional support</li>
+                    <li><i class="fas fa-check-circle" style="color: var(--primary); margin-right: 8px;"></i> Personalized coping strategies</li>
+                    <li><i class="fas fa-check-circle" style="color: var(--primary); margin-right: 8px;"></i> Mental health education resources</li>
+                    <li><i class="fas fa-check-circle" style="color: var(--primary); margin-right: 8px;"></i> Mood tracking and insights</li>
+                    <li><i class="fas fa-check-circle" style="color: var(--primary); margin-right: 8px;"></i> Privacy-focused design</li>
+                </ul>
+                <p>Our goal is to make mental health support more accessible while maintaining the highest standards of privacy and ethical AI use.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features">
+        <h2 class="section-title">Key Features</h2>
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3>AI Conversations</h3>
+                <p>Our AI engages in natural, empathetic dialogues to help process emotions and thoughts in a safe, judgment-free space.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Mood Tracking</h3>
+                <p>Visualize your emotional patterns over time with our intuitive tracking system to better understand your mental health journey.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>CBT Techniques</h3>
+                <p>Incorporates evidence-based Cognitive Behavioral Therapy methods to help reframe negative thought patterns.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Creators -->
+    <section id="creators">
+        <h2 class="section-title">Meet The Creators</h2>
+        <div class="creators">
+            <div class="creator-card">
+                <img src="images/prachi.jpg" alt="Prachi Deshmukh" class="creator-img">
+                <h3>Prachi Deshmukh</h3>
+                <p>Co-Founder & Developer</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+            <div class="creator-card">
+                <img src="images/radhey.jpg" alt="Radhey Patil" class="creator-img">
+                <h3>Radhey Patil</h3>
+                <p>Co-Founder & Developer</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+        <h2 class="section-title">Get In Touch</h2>
+        <div class="contact-content">
+            <p>We'd love to hear your feedback about Mental Health AI Companion and how we can improve this mental health resource.</p>
+            <p>Email us at: <a href="mailto:mentalhealthaicompanion@gmail.com" class="contact-email">mentalhealthaicompanion@gmail.com</a></p>
+            <p><small>Academic Project | Developed in 2025</small></p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#about">About</a>
+                <a href="#features">Features</a>
+                <a href="#creators">Creators</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <p class="copyright">© 2025 Mental Health AI Companion. Created by Prachi Deshmukh & Radhey Patil.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    if (window.innerWidth <= 768) {
+                        navLinks.style.display = 'none';
+                    }
+                }
+            });
+        });
+        
+        // Header shadow on scroll
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 10) {
+                header.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+            } else {
+                header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service | Mental Health AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        /* Shared Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding-top: 80px;
+            line-height: 1.6;
+        }
+        
+        /* Navigation Styles */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 94%;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            z-index: 1000;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #483d8b;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #6a5acd;
+        }
+        
+        .nav-links a.active {
+            color: #6a5acd;
+            font-weight: 600;
+        }
+        
+        .nav-links a i {
+            font-size: 1.1rem;
+        }
+        
+        /* Terms Hero Section */
+        .terms-hero {
+            background: linear-gradient(135deg, rgba(106, 90, 205, 0.9), rgba(72, 61, 139, 0.9)),
+                        url('https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            color: white;
+            padding: 80px 5%;
+            text-align: center;
+            position: relative;
+        }
+        
+        .terms-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            z-index: 1;
+        }
+        
+        .terms-hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .terms-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .terms-hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .terms-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .terms-content {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        
+        .last-updated {
+            text-align: right;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            color: #483d8b;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        
+        h3 {
+            color: #6a5acd;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            font-size: 1.4rem;
+        }
+        
+        p, li {
+            color: #555;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            padding-left: 20px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .highlight-box {
+            background: #f9f9ff;
+            border-left: 4px solid #6a5acd;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                padding: 15px;
+            }
+            
+            .logo {
+                margin-bottom: 15px;
+            }
+            
+            .nav-links {
+                width: 100%;
+                justify-content: space-around;
+                gap: 10px;
+            }
+            
+            .nav-links a span {
+                display: none;
+            }
+            
+            .terms-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .terms-content {
+                padding: 25px;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <img src="https://img.icons8.com/ios/100/000000/melting-ice-cream.png" alt="Mental Health AI Logo"> 
+            <span>Mental Health AI</span>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}"><i class="fa-solid fa-house" aria-hidden="true" style="margin-right: 5px;"></i></i>Home</a>
+        </div>
+    </nav>
+
+    <!-- Terms Hero -->
+    <section class="terms-hero">
+        <div class="terms-hero-content">
+            <h1>Terms of Service</h1>
+            <p>Please read these terms carefully before using our Mental Health AI Companion services</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="terms-container">
+        <div class="terms-content">
+            <div class="last-updated">Effective Date: June 15, 2023</div>
+            
+            <div class="highlight-box">
+                <p><strong>Summary:</strong> By using Mental Health AI Companion, you agree to these terms. Our service provides AI-powered mental health support but is not a substitute for professional medical care. You're responsible for your use of the service and any content you provide.</p>
+            </div>
+            
+            <h2>1. Acceptance of Terms</h2>
+            <p>By accessing or using the Mental Health AI Companion ("Service"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to all of these Terms, do not use our Service.</p>
+            
+            <h3>2. Description of Service</h3>
+            <p>Mental Health AI Companion provides:</p>
+            <ul>
+                <li>AI-powered mental health support and resources</li>
+                <li>Mood tracking and journaling tools</li>
+                <li>Personalized recommendations and insights</li>
+                <li>Educational mental health content</li>
+            </ul>
+            <p><strong>Important:</strong> Our Service is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of qualified health providers with any questions regarding medical conditions.</p>
+            
+            <h3>3. User Responsibilities</h3>
+            <p>As a user of our Service, you agree to:</p>
+            <ul>
+                <li>Provide accurate and complete registration information</li>
+                <li>Maintain the confidentiality of your account credentials</li>
+                <li>Use the Service only for lawful purposes</li>
+                <li>Not impersonate any person or entity</li>
+                <li>Not engage in any activity that interferes with the Service</li>
+                <li>Comply with all applicable laws and regulations</li>
+            </ul>
+            
+            <h3>4. Account Registration</h3>
+            <p>To access certain features, you must register for an account. You must:</p>
+            <ul>
+                <li>Be at least 16 years of age (or older if required by your jurisdiction)</li>
+                <li>Provide a valid email address</li>
+                <li>Create a secure password</li>
+                <li>Keep your account information current</li>
+            </ul>
+            <p>You are responsible for all activities that occur under your account.</p>
+            
+            <div class="highlight-box">
+                <p><strong>Emergency Situations:</strong> Our Service is not designed for crisis situations. If you are experiencing a mental health emergency, please contact your local emergency services or a crisis hotline immediately.</p>
+            </div>
+            
+            <h3>5. Intellectual Property</h3>
+            <p>All content and materials available on the Service, including but not limited to:</p>
+            <ul>
+                <li>Text</li>
+                <li>Graphics</li>
+                <li>Logos</li>
+                <li>Software</li>
+                <li>AI models and algorithms</li>
+            </ul>
+            <p>are the property of Mental Health AI or its licensors and are protected by copyright, trademark, and other intellectual property laws.</p>
+            
+            <h3>6. User Content</h3>
+            <p>You retain ownership of any content you create or upload to the Service ("User Content"). By submitting User Content, you grant us a license to:</p>
+            <ul>
+                <li>Use, reproduce, and modify the content to provide the Service</li>
+                <li>Analyze content to improve our AI models (all analysis is anonymized)</li>
+                <li>Generate aggregated, non-identifiable insights</li>
+            </ul>
+            
+            <h3>7. Prohibited Conduct</h3>
+            <p>You agree not to:</p>
+            <ul>
+                <li>Use the Service for any unlawful purpose</li>
+                <li>Attempt to reverse engineer or access our AI models improperly</li>
+                <li>Upload harmful or malicious content</li>
+                <li>Harass, threaten, or intimidate other users</li>
+                <li>Use the Service to provide mental health advice to others</li>
+                <li>Violate the privacy rights of others</li>
+            </ul>
+            
+            <h3>8. Disclaimers</h3>
+            <p>The Service is provided "as is" without warranties of any kind. We do not warrant that:</p>
+            <ul>
+                <li>The Service will be uninterrupted or error-free</li>
+                <li>The results obtained from using the Service will be accurate or reliable</li>
+                <li>The Service will meet your specific mental health needs</li>
+            </ul>
+            <p>We are not responsible for any decisions made based on information provided by the Service.</p>
+            
+            <h3>9. Limitation of Liability</h3>
+            <p>To the maximum extent permitted by law, Mental Health AI shall not be liable for:</p>
+            <ul>
+                <li>Any indirect, incidental, or consequential damages</li>
+                <li>Loss of data or profits</li>
+                <li>Personal injury or emotional distress resulting from use of the Service</li>
+            </ul>
+            
+            <h3>10. Modifications to Terms</h3>
+            <p>We may modify these Terms at any time. We will notify you of significant changes through:</p>
+            <ul>
+                <li>Email to your registered address</li>
+                <li>Notice within the Service</li>
+                <li>Updated "Effective Date" at the top of these Terms</li>
+            </ul>
+            <p>Continued use after changes constitutes acceptance of the modified Terms.</p>
+            
+            <h3>11. Termination</h3>
+            <p>We may terminate or suspend your account at any time without notice for:</p>
+            <ul>
+                <li>Violation of these Terms</li>
+                <li>Conduct that creates legal exposure for us</li>
+                <li>Inactivity for an extended period</li>
+            </ul>
+            <p>You may terminate your account at any time through your account settings.</p>
+            
+            <h3>12. Governing Law</h3>
+            <p>These Terms shall be governed by the laws of the State of California, without regard to its conflict of law provisions.</p>
+            
+            <h3>13. Contact Information</h3>
+            <p>For questions about these Terms, please contact us at:</p>
+            <p><strong>Email:</strong> <a href="mailto:legal@mentalhealthai.com" style="color: #6a5acd; text-decoration: none;">legal@mentalhealthai.com</a></p>
+            <p><strong>Mail:</strong> Legal Department, Mental Health AI, 123 Wellness Way, San Francisco, CA 94107</p>
+        </div>
+    </div>
+
+    <footer style="
+        background: linear-gradient(135deg, #6a5acd, #483d8b);
+        color: white;
+        padding: 40px 5%;
+        margin-top: 60px;
+        text-align: center;
+    ">
+        <div style="
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        ">
+            <h3 style="
+                color: white;
+                margin-bottom: 20px;
+                font-size: 1.3rem;
+            ">Need Help?</h3>
+            <p style="color: rgba(255,255,255,0.8); margin-bottom: 15px;">
+                Contact our support team with any questions about these terms
+            </p>
+            <p style="color: rgba(255,255,255,0.8); margin-bottom: 10px;">
+                <strong>Email:</strong> <a href="mailto:support@mentalhealthai.com" style="color: white; text-decoration: none;">support@mentalhealthai.com</a>
+            </p>
+            <p style="color: rgba(255,255,255,0.8);">
+                <strong>Hours:</strong> Monday-Friday, 9am-5pm PST
+            </p>
+        </div>
+        <div style="
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+        ">
+            <p>&copy; 2023 Mental Health AI. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple script to handle potential accordion functionality if sections were expanded
+        document.querySelectorAll('h3').forEach(header => {
+            header.addEventListener('click', function() {
+                // This would toggle content visibility in an expanded terms page
+                // Currently all content is visible by default
+            });
+        });
+    </script>
+</body>
+</html>

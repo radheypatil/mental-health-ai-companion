@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Error | Mental Health AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Same styles as 404.html with minor color changes -->
+    <style>
+        /* [Previous CSS from 404.html remains the same] */
+        
+        .error-content h1 {
+            background: linear-gradient(to right, #dc3545, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .error-icon {
+            color: #dc3545;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #dc3545, #ff6b6b);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn:hover {
+            background: linear-gradient(45deg, #ff6b6b, #dc3545);
+            box-shadow: 0 8px 20px rgba(220, 53, 69, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <img src="https://img.icons8.com/ios/100/000000/melting-ice-cream.png" alt="Mental Health AI Logo">
+            <span>Mental Health AI</span>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}"><i class="fa-solid fa-house"></i> <span>Home</span></a>
+        </div>
+    </nav>
+
+    <!-- Error Content -->
+    <div class="error-container">
+        <div class="error-content">
+            <div class="error-icon">
+                <i class="fas fa-server"></i>
+            </div>
+            <h1>500</h1>
+            <h2>Internal Server Error</h2>
+            <p>Something went wrong on our end. Our team has been notified and we're working to fix it.</p>
+            <a href="{{ url_for('home') }}" class="btn">Return to Home</a>
+        </div>
+    </div>
+</body>
+</html>

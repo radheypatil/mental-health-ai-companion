@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Therapeutic Games | Mental Health AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* NAVIGATION BAR STYLES (FROM COMMUNITY PAGE) */
+        nav {
+            background: linear-gradient(135deg, #6a5acd, #483d8b);
+            padding: 15px 3%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            position: fixed;
+            width: 94%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo img {
+            height: 35px;
+            margin-right: 8px;
+        }
+
+        .logo span {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(to right, #ffffff, #ffcc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 5px 0;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+            flex-shrink: 0;
+            padding: 5px 8px;
+        }
+
+        .nav-links a:hover {
+            color: #ffcc00;
+            transform: translateY(-2px);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #ffcc00;
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Search Bar - Fixed positioning */
+        .search-container {
+            position: relative;
+            height: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar {
+            position: fixed;
+            right: 3%;
+            top: 70px;
+            width: 300px;
+            display: none;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .search-bar.active {
+            display: block;
+        }
+
+        .search-input-container {
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 2px solid #e0e0e0;
+            border-radius: 30px;
+            font-family: 'Poppins', sans-serif;
+            outline: none;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .search-bar input:focus {
+            border-color: #6a5acd;
+            box-shadow: 0 0 10px rgba(106, 90, 205, 0.3);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6a5acd;
+        }
+
+        .search-results {
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .search-result-item {
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .search-result-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .search-result-item i {
+            margin-right: 10px;
+            color: #6a5acd;
+        }
+
+        .search-result-item .result-text {
+            flex: 1;
+        }
+
+        .search-result-item .result-category {
+            font-size: 0.8rem;
+            color: #888;
+            margin-left: 10px;
+        }
+
+        .no-results {
+            padding: 10px;
+            color: #666;
+            text-align: center;
+        }
+
+        .search-result-item.highlighted {
+            background-color: #e6e6fa;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* REST OF YOUR GAME PAGE STYLES */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding-top: 80px;
+        }
+        
+        /* Games-Specific Styles */
+        .games-hero {
+            background: linear-gradient(135deg, rgba(106, 90, 205, 0.9), rgba(72, 61, 139, 0.9)),
+                        url('https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            color: white;
+            padding: 80px 5%;
+            text-align: center;
+            position: relative;
+        }
+        
+        .games-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            z-index: 1;
+        }
+        
+        .games-hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .games-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .games-hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .games-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        /* Game Sections */
+        .game-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .game-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .game-header h2 {
+            color: #483d8b;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .game-header .game-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f0f0ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6a5acd;
+            font-size: 1.2rem;
+        }
+        
+        .game-description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .game-benefits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .benefit-tag {
+            background: #f0f0ff;
+            color: #6a5acd;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+        
+        /* Game Containers */
+        .game-canvas-container {
+            background: #f9f9ff;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 1px dashed #e6e6fa;
+            position: relative;
+        }
+        
+        canvas {
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+            max-width: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .game-controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            background: #f0f0ff;
+            color: #6a5acd;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .control-btn:hover {
+            background: #e6e6fa;
+        }
+        
+        .primary-btn {
+            background: linear-gradient(45deg, #6a5acd, #8e7dff);
+            color: white;
+        }
+        
+        .primary-btn:hover {
+            background: linear-gradient(45deg, #8e7dff, #6a5acd);
+        }
+        
+        .game-stats {
+            display: flex;
+            gap: 15px;
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+        
+        /* Breathing Exercise Specific */
+        .breathing-display {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            transition: all 1s ease-in-out;
+        }
+        
+        /* Pattern Game Specific */
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        .pattern-cell {
+            aspect-ratio: 1/1;
+            background: #f0f0ff;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .pattern-cell.active {
+            background: #6a5acd;
+        }
+        
+        /* Coloring Game Specific */
+        .coloring-tools {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .color-option {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s;
+        }
+        
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+        
+        .color-option.selected {
+            border-color: #333;
+            transform: scale(1.1);
+        }
+        
+        .brush-size {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Zen Garden Specific */
+        .zen-tools {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .zen-tool {
+            background: #f0f0ff;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .zen-tool:hover {
+            background: #e6e6fa;
+        }
+        
+        .zen-tool.selected {
+            background: #6a5acd;
+            color: white;
+        }
+        
+        /* Mandala Creator Specific */
+        .mandala-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .mandala-slider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Soundscape Composer Specific */
+        .sound-mixer {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .sound-channel {
+            background: #f0f0ff;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .sound-channel h4 {
+            margin-top: 0;
+            color: #483d8b;
+        }
+        
+        .sound-slider {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .games-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .pattern-grid {
+                grid-template-columns: repeat(4, 1fr);
+                max-width: 300px;
+            }
+            
+            .breathing-display {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .sound-mixer {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links a {
+                margin: 0 5px;
+                font-size: 14px;
+            }
+
+            .nav-links a span {
+                display: none;
+            }
+
+            .nav-links a i {
+                margin-right: 0;
+            }
+
+            .search-bar {
+                width: 200px;
+                right: -30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION BAR (FROM COMMUNITY PAGE) -->
+    <nav>
+        <div class="logo">
+            <img src="https://img.icons8.com/ios/100/000000/melting-ice-cream.png" alt="Mental Health AI Logo">
+            <span>Mental Health AI</span>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}"><i class="fa-solid fa-house" aria-hidden="true" style="margin-right: 5px;"></i></i>Home</a>
+            <a href="{{ url_for('notification') }}"><i class="fa-solid fa-bell"></i> <span>Notifications</span></a>
+            <div class="search-container">
+                <a href="#" id="search-toggle"><i class="fa-solid fa-magnifying-glass"></i> <span>Search</span></a>
+                <div class="search-bar" id="search-bar">
+                    <div class="search-input-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="search-input" placeholder="Search features, articles...">
+                    </div>
+                    <div class="search-results" id="search-results">
+                        <!-- Results will be inserted here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            <a href="{{ url_for('setting') }}"><i class="fa-solid fa-gear" aria-hidden="true"></i> <span>Settings</span></a>
+        </div>
+    </nav>
+
+    <!-- REST OF YOUR GAME PAGE CONTENT -->
+    <!-- Games Hero -->
+    <section class="games-hero">
+        <div class="games-hero-content">
+            <h1>Play for Peace</h1>
+            <p>Therapeutic games designed to reduce stress, improve focus, and bring moments of calm</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="games-container">
+        <!-- Game 1: Zen Garden Sandbox -->
+        <div class="game-section">
+            <div class="game-header">
+                <h2>
+                    <div class="game-icon">
+                        <i class="fas fa-mountain"></i>
+                    </div>
+                    Zen Garden Sandbox
+                </h2>
+                <div style="color: #888; font-size: 0.9rem;">Mindfulness • 3 min+</div>
+            </div>
+            
+            <p class="game-description">
+                Create your peaceful Japanese rock garden. Rake patterns in the sand, place stones, and watch cherry blossoms fall. 
+                <strong>Perfect for meditation and creative expression</strong>.
+            </p>
+            
+            <div class="game-benefits">
+                <span class="benefit-tag">Stress Relief</span>
+                <span class="benefit-tag">Mindfulness</span>
+                <span class="benefit-tag">Creativity</span>
+            </div>
+            
+            <div class="game-canvas-container">
+                <canvas id="zenCanvas" width="600" height="400"></canvas>
+                <div class="zen-tools">
+                    <div class="zen-tool selected" data-tool="rake">
+                        <i class="fas fa-broom"></i> Rake
+                    </div>
+                    <div class="zen-tool" data-tool="stone">
+                        <i class="fas fa-gem"></i> Stone
+                    </div>
+                    <div class="zen-tool" data-tool="plant">
+                        <i class="fas fa-leaf"></i> Plant
+                    </div>
+                    <div class="zen-tool" data-tool="clear">
+                        <i class="fas fa-eraser"></i> Clear
+                    </div>
+                </div>
+            </div>
+            
+            <div class="game-controls">
+                <button class="control-btn primary-btn" id="newZenGarden">
+                    <i class="fas fa-plus"></i> New Garden
+                </button>
+                <button class="control-btn" id="saveZenGarden">
+                    <i class="fas fa-download"></i> Save
+                </button>
+                <button class="control-btn" id="zenMusic">
+                    <i class="fas fa-music"></i> Ambient Music
+                </button>
+            </div>
+            
+            <div class="game-stats">
+                <span><i class="fas fa-clock"></i> <span id="zenTime">0:00</span></span>
+                <span><i class="fas fa-spa"></i> <span id="zenElements">0</span> elements</span>
+                <span><i class="fas fa-heart"></i> <span id="zenCalm">0%</span> calm</span>
+            </div>
+        </div>
+        
+        <!-- Game 2: Mood Mandala Creator -->
+        <div class="game-section">
+            <div class="game-header">
+                <h2>
+                    <div class="game-icon" style="background: #f0f4ff; color: #a66bff;">
+                        <i class="fas fa-snowflake"></i>
+                    </div>
+                    Mood Mandala Creator
+                </h2>
+                <div style="color: #888; font-size: 0.9rem;">Creativity • 5 min+</div>
+            </div>
+            
+            <p class="game-description">
+                Generate beautiful mandalas that reflect your current mood. Adjust complexity, colors, and patterns to create 
+                <strong>a personal meditation focus</strong> that evolves with your emotions.
+            </p>
+            
+            <div class="game-benefits">
+                <span class="benefit-tag" style="background: #f0f4ff; color: #a66bff;">Emotional Expression</span>
+                <span class="benefit-tag" style="background: #f0f4ff; color: #a66bff;">Focus</span>
+                <span class="benefit-tag" style="background: #f0f4ff; color: #a66bff;">Art Therapy</span>
+            </div>
+            
+            <div class="game-canvas-container">
+                <canvas id="mandalaCanvas" width="500" height="500"></canvas>
+                <div class="mandala-controls">
+                    <div class="mandala-slider">
+                        <span>Complexity:</span>
+                        <input type="range" id="mandalaComplexity" min="3" max="20" value="8">
+                        <span id="complexityValue">8</span>
+                    </div>
+                    <div class="mandala-slider">
+                        <span>Color Mood:</span>
+                        <input type="range" id="mandalaMood" min="0" max="4" value="2">
+                        <span id="moodValue">Neutral</span>
+                    </div>
+                    <button class="control-btn" id="randomizeMandala">
+                        <i class="fas fa-random"></i> Randomize
+                    </button>
+                </div>
+            </div>
+            
+            <div class="game-controls">
+                <button class="control-btn primary-btn" id="saveMandala">
+                    <i class="fas fa-download"></i> Save Mandala
+                </button>
+                <button class="control-btn" id="animateMandala">
+                    <i class="fas fa-play"></i> Animate
+                </button>
+                <button class="control-btn" id="printMandala">
+                    <i class="fas fa-print"></i> Print
+                </button>
+            </div>
+            
+            <div class="game-stats">
+                <span><i class="fas fa-palette"></i> <span id="mandalaColors">8</span> colors</span>
+                <span><i class="fas fa-layer-group"></i> <span id="mandalaLayers">5</span> layers</span>
+                <span><i class="fas fa-magic"></i> <span id="mandalaHarmony">75%</span> harmony</span>
+            </div>
+        </div>
+        
+        <!-- Game 3: Soundscape Composer -->
+        <div class="game-section">
+            <div class="game-header">
+                <h2>
+                    <div class="game-icon" style="background: #e3f2fd; color: #66b3ff;">
+                        <i class="fas fa-water"></i>
+                    </div>
+                    Soundscape Composer
+                </h2>
+                <div style="color: #888; font-size: 0.9rem;">Relaxation • 5 min+</div>
+            </div>
+            
+            <p class="game-description">
+                Mix your perfect ambient soundscape. Combine nature sounds, white noise, and calming tones to create 
+                <strong>your personal relaxation soundtrack</strong>. Great for meditation, focus, or sleep.
+            </p>
+            
+            <div class="game-benefits">
+                <span class="benefit-tag" style="background: #e3f2fd; color: #3385ff;">Sound Therapy</span>
+                <span class="benefit-tag" style="background: #e3f2fd; color: #3385ff;">Focus</span>
+                <span class="benefit-tag" style="background: #e3f2fd; color: #3385ff;">Sleep Aid</span>
+            </div>
+            
+            <div class="game-canvas-container">
+                <div class="sound-mixer">
+                    <div class="sound-channel">
+                        <h4>Rain</h4>
+                        <i class="fas fa-cloud-rain" style="font-size: 2rem; color: #66b3ff;"></i>
+                        <input type="range" class="sound-slider" data-sound="rain" min="0" max="100" value="0">
+                    </div>
+                    <div class="sound-channel">
+                        <h4>Waves</h4>
+                        <i class="fas fa-water" style="font-size: 2rem; color: #3385ff;"></i>
+                        <input type="range" class="sound-slider" data-sound="waves" min="0" max="100" value="0">
+                    </div>
+                    <div class="sound-channel">
+                        <h4>Forest</h4>
+                        <i class="fas fa-tree" style="font-size: 2rem; color: #8fd694;"></i>
+                        <input type="range" class="sound-slider" data-sound="forest" min="0" max="100" value="0">
+                    </div>
+                    <div class="sound-channel">
+                        <h4>Wind</h4>
+                        <i class="fas fa-wind" style="font-size: 2rem; color: #a66bff;"></i>
+                        <input type="range" class="sound-slider" data-sound="wind" min="0" max="100" value="0">
+                    </div>
+                    <div class="sound-channel">
+                        <h4>Singing Bowl</h4>
+                        <i class="fas fa-music" style="font-size: 2rem; color: #ff6b6b;"></i>
+                        <input type="range" class="sound-slider" data-sound="bowl" min="0" max="100" value="0">
+                    </div>
+                    <div class="sound-channel">
+                        <h4>White Noise</h4>
+                        <i class="fas fa-fan" style="font-size: 2rem; color: #888;"></i>
+                        <input type="range" class="sound-slider" data-sound="noise" min="0" max="100" value="0">
+                    </div>
+                </div>
+                <div id="soundscapeMessage" style="font-style: italic; color: #666;">
+                    Adjust the sliders to create your perfect ambient mix
+                </div>
+            </div>
+            
+            <div class="game-controls">
+                <button class="control-btn primary-btn" id="playSoundscape">
+                    <i class="fas fa-play"></i> Play
+                </button>
+                <button class="control-btn" id="pauseSoundscape">
+                    <i class="fas fa-pause"></i> Pause
+                </button>
+                <button class="control-btn" id="saveSoundscape">
+                    <i class="fas fa-save"></i> Save Mix
+                </button>
+            </div>
+            
+            <div class="game-stats">
+                <span><i class="fas fa-clock"></i> <span id="soundscapeTime">0:00</span></span>
+                <span><i class="fas fa-volume-up"></i> <span id="activeSounds">0</span>/6 sounds</span>
+                <span><i class="fas fa-heartbeat"></i> <span id="soundscapeCalm">0%</span> calm</span>
+            </div>
+        </div>
+        
+        <!-- Game 4: Mindful Coloring -->
+        <div class="game-section">
+            <div class="game-header">
+                <h2>
+                    <div class="game-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                    Mindful Coloring
+                </h2>
+                <div style="color: #888; font-size: 0.9rem;">Stress Relief • 3 min+</div>
+            </div>
+            
+            <p class="game-description">
+                Engage in the meditative practice of coloring. Choose colors that resonate with your mood and 
+                <strong>focus on the present moment</strong> as you fill the design. Coloring has been shown to 
+                reduce anxiety and promote mindfulness.
+            </p>
+            
+            <div class="game-benefits">
+                <span class="benefit-tag">Anxiety Reduction</span>
+                <span class="benefit-tag">Mindfulness</span>
+                <span class="benefit-tag">Creativity</span>
+            </div>
+            
+            <div class="game-canvas-container">
+                <canvas id="coloringCanvas" width="600" height="400"></canvas>
+                <div class="coloring-tools">
+                    <div class="color-option selected" style="background: #6a5acd;" data-color="#6a5acd"></div>
+                    <div class="color-option" style="background: #ff6b6b;" data-color="#ff6b6b"></div>
+                    <div class="color-option" style="background: #66b3ff;" data-color="#66b3ff"></div>
+                    <div class="color-option" style="background: #8fd694;" data-color="#8fd694"></div>
+                    <div class="color-option" style="background: #ffd166;" data-color="#ffd166"></div>
+                    <div class="color-option" style="background: #a66bff;" data-color="#a66bff"></div>
+                    <div class="color-option" style="background: #333;" data-color="#333"></div>
+                    <div class="color-option" style="background: #fff; border: 1px solid #ccc;" data-color="#fff"></div>
+                </div>
+                <div class="brush-size">
+                    <span>Brush Size:</span>
+                    <input type="range" id="brushSize" min="2" max="20" value="8">
+                    <span id="brushSizeValue">8</span>
+                </div>
+            </div>
+            
+            <div class="game-controls">
+                <button class="control-btn primary-btn" id="newColoring">
+                    <i class="fas fa-plus"></i> New Design
+                </button>
+                <button class="control-btn" id="clearColoring">
+                    <i class="fas fa-eraser"></i> Clear
+                </button>
+                <button class="control-btn" id="saveColoring">
+                    <i class="fas fa-download"></i> Save
+                </button>
+            </div>
+            
+            <div class="game-stats">
+                <span><i class="fas fa-clock"></i> <span id="coloringTime">0:00</span></span>
+                <span><i class="fas fa-paint-brush"></i> <span id="brushStrokes">0</span> strokes</span>
+                <span><i class="fas fa-heart"></i> <span id="coloringRelax">0%</span> relaxation</span>
+            </div>
+        </div>
+        
+        <!-- Game 5: 4-7-8 Breathing Exercise -->
+        <div class="game-section">
+            <div class="game-header">
+                <h2>
+                    <div class="game-icon" style="background: #e3f2fd; color: #66b3ff;">
+                        <i class="fas fa-wind"></i>
+                    </div>
+                    4-7-8 Breathing Exercise
+                </h2>
+                <div style="color: #888; font-size: 0.9rem;">Anxiety Relief • 5 min</div>
+            </div>
+            
+            <p class="game-description">
+                Proven technique to activate the parasympathetic nervous system. Follow the animation: 
+                <strong>Inhale for 4 seconds</strong>, <strong>Hold for 7 seconds</strong>, 
+                <strong>Exhale for 8 seconds</strong>. Repeat for 3-5 cycles.
+            </p>
+            
+            <div class="game-benefits">
+                <span class="benefit-tag" style="background: #e3f2fd; color: #3385ff;">Instant Calm</span>
+                <span class="benefit-tag" style="background: #e3f2fd; color: #3385ff;">Sleep Aid</span>
+                <span class="benefit-tag" style="background: #e3f2fd; color: #3385ff;">Panic Relief</span>
+            </div>
+            
+            <div class="game-canvas-container" style="text-align: center;">
+                <div class="breathing-display" id="breathingCircle" style="background: linear-gradient(45deg, #66b3ff, #3385ff);">
+                    Ready
+                </div>
+                <div id="breathingInstruction" style="font-weight: 500; color: #483d8b; margin-bottom: 10px;">
+                    Click "Start" to begin
+                </div>
+            </div>
+            
+            <div class="game-controls">
+                <button class="control-btn primary-btn" id="startBreathing">
+                    <i class="fas fa-play"></i> Start
+                </button>
+                <button class="control-btn" id="pauseBreathing">
+                    <i class="fas fa-pause"></i> Pause
+                </button>
+                <button class="control-btn" id="completeBreathing">
+                    <i class="fas fa-check"></i> Complete 3 Cycles
+                </button>
+            </div>
+            
+            <div class="game-stats">
+                <span><i class="fas fa-sync-alt"></i> <span id="breathCycles">0</span>/3 cycles</span>
+                <span><i class="fas fa-lungs"></i> <span id="totalBreaths">0</span> breaths</span>
+                <span><i class="fas fa-heartbeat"></i> <span id="heartRateSim">72</span> bpm</span>
+            </div>
+        </div>
+        
+        <!-- Game 6: Pattern Matching Focus Game -->
+        <div class="game-section">
+            <div class="game-header">
+                <h2>
+                    <div class="game-icon" style="background: #f0f4ff; color: #a66bff;">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    Focus Flow
+                </h2>
+                <div style="color: #888; font-size: 0.9rem;">Concentration • 3 min+</div>
+            </div>
+            
+            <p class="game-description">
+                Match the pattern sequence to train your focus. Starts simple but adapts to your skill level. 
+                <strong>Improves working memory and attention span</strong> with regular use.
+            </p>
+            
+            <div class="game-benefits">
+                <span class="benefit-tag" style="background: #f0f4ff; color: #a66bff;">ADHD Support</span>
+                <span class="benefit-tag" style="background: #f0f4ff; color: #a66bff;">Memory Boost</span>
+                <span class="benefit-tag" style="background: #f0f4ff; color: #a66bff;">Flow State</span>
+            </div>
+            
+            <div class="game-canvas-container">
+                <div class="pattern-grid" id="patternGrid"></div>
+                <div id="patternMessage" style="margin-top: 20px; font-weight: 500; color: #483d8b; text-align: center;">
+                    Watch the pattern, then repeat it
+                </div>
+            </div>
+            
+            <div class="game-controls">
+                <button class="control-btn primary-btn" id="startPattern">
+                    <i class="fas fa-play"></i> Start Game
+                </button>
+                <button class="control-btn" id="nextLevel" disabled>
+                    <i class="fas fa-forward"></i> Next Level
+                </button>
+                <button class="control-btn" id="showHint">
+                    <i class="fas fa-lightbulb"></i> Hint
+                </button>
+            </div>
+            
+            <div class="game-stats">
+                <span><i class="fas fa-layer-group"></i> Level: <span id="patternLevel">1</span></span>
+                <span><i class="fas fa-memory"></i> Sequence: <span id="patternLength">3</span></span>
+                <span><i class="fas fa-star"></i> Score: <span id="patternScore">0</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEARCH FUNCTIONALITY JS (FROM COMMUNITY PAGE) -->
+    <script>
+        // Search functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchToggle = document.getElementById('search-toggle');
+            const searchBar = document.getElementById('search-bar');
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('search-results');
+            
+            // Sample search data - replace with your actual content
+            const searchData = [
+                { title: "Mood Tracker", category: "Feature", icon: "heart", link: "moodtracker.html" },
+                { title: "Journaling", category: "Feature", icon: "book", link: "journaling.html" },
+                { title: "Community Support", category: "Feature", icon: "users", link: "community.html" },
+                { title: "Music Therapy", category: "Feature", icon: "music", link: "music.html" },
+                { title: "Therapeutic Games", category: "Feature", icon: "gamepad", link: "games.html" },
+                { title: "Progress Tracking", category: "Feature", icon: "chart-line", link: "progress.html" },
+                { title: "Stress Management", category: "Article", icon: "leaf", link: "#" },
+                { title: "Anxiety Relief", category: "Article", icon: "cloud", link: "#" },
+                { title: "Settings", category: "Page", icon: "gear", link: "#" },
+                { title: "Profile", category: "Page", icon: "user", link: "#" }
+            ];
+
+            // Toggle search bar
+            searchToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                searchBar.classList.toggle('active');
+                if (searchBar.classList.contains('active')) {
+                    searchInput.focus();
+                }
+            });
+
+            // Close search when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchBar.contains(e.target) && e.target !== searchToggle && !searchToggle.contains(e.target)) {
+                    searchBar.classList.remove('active');
+                }
+            });
+
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                const results = searchData.filter(item => 
+                    item.title.toLowerCase().includes(query) || 
+                    item.category.toLowerCase().includes(query)
+                );
+                
+                displayResults(results);
+            });
+
+            // Keyboard navigation
+            let highlightedIndex = -1;
+            
+            searchInput.addEventListener('keydown', function(e) {
+                const results = document.querySelectorAll('.search-result-item');
+                
+                if (e.key === 'ArrowDown' && results.length > 0) {
+                    e.preventDefault();
+                    highlightedIndex = (highlightedIndex + 1) % results.length;
+                    updateHighlightedItem(results);
+                } else if (e.key === 'ArrowUp' && results.length > 0) {
+                    e.preventDefault();
+                    highlightedIndex = (highlightedIndex - 1 + results.length) % results.length;
+                    updateHighlightedItem(results);
+                } else if (e.key === 'Enter' && highlightedIndex >= 0) {
+                    e.preventDefault();
+                    results[highlightedIndex].click();
+                } else if (e.key === 'Escape') {
+                    searchBar.classList.remove('active');
+                }
+            });
+
+            function updateHighlightedItem(results) {
+                results.forEach((item, index) => {
+                    if (index === highlightedIndex) {
+                        item.classList.add('highlighted');
+                        item.scrollIntoView({ block: 'nearest' });
+                    } else {
+                        item.classList.remove('highlighted');
+                    }
+                });
+            }
+
+            function displayResults(results) {
+                if (searchInput.value.trim() === '') {
+                    searchResults.innerHTML = '';
+                    highlightedIndex = -1;
+                    return;
+                }
+
+                if (results.length === 0) {
+                    searchResults.innerHTML = '<div class="no-results">No results found</div>';
+                    return;
+                }
+
+                searchResults.innerHTML = results.map(item => `
+                    <a href="${item.link}" class="search-result-item">
+                        <i class="fas fa-${item.icon}"></i>
+                        <div class="result-text">${item.title}</div>
+                        <div class="result-category">${item.category}</div>
+                    </a>
+                `).join('');
+
+                // Reset highlighted index when new results are displayed
+                highlightedIndex = -1;
+            }
+
+            // Close search when a result is clicked
+            searchResults.addEventListener('click', function(e) {
+                if (e.target.closest('.search-result-item')) {
+                    searchBar.classList.remove('active');
+                    searchInput.value = '';
+                    searchResults.innerHTML = '';
+                }
+            });
+        });
+    </script>
+
+    <!-- YOUR GAME PAGE JAVASCRIPT -->
+    <script>
+        // ======================
+        // ZEN GARDEN GAME
+        // ======================
+        const zenCanvas = document.getElementById('zenCanvas');
+        const zenCtx = zenCanvas.getContext('2d');
+        let currentTool = 'rake';
+        let zenElementsCount = 0;
+        let zenStartTime = Date.now();
+        let zenInterval;
+        let isZenMusicPlaying = false;
+        let lastRakeX, lastRakeY;
+        
+        // Initialize garden
+        function initZenGarden() {
+            // Sand background
+            const gradient = zenCtx.createLinearGradient(0, 0, zenCanvas.width, zenCanvas.height);
+            gradient.addColorStop(0, '#f5e6b8');
+            gradient.addColorStop(1, '#e8d49a');
+            zenCtx.fillStyle = gradient;
+            zenCtx.fillRect(0, 0, zenCanvas.width, zenCanvas.height);
+            
+            // Draw initial rake pattern
+            drawRakePattern();
+            
+            zenElementsCount = 0;
+            updateZenStats();
+        }
+        
+        function drawRakePattern() {
+            zenCtx.strokeStyle = '#d9c88e';
+            zenCtx.lineWidth = 2;
+            zenCtx.beginPath();
+            
+            // Draw wavy rake patterns
+            for (let y = 50; y < zenCanvas.height - 50; y += 30) {
+                zenCtx.moveTo(50, y);
+                for (let x = 50; x < zenCanvas.width - 50; x += 20) {
+                    const offset = Math.sin(x * 0.05) * 10;
+                    zenCtx.lineTo(x, y + offset);
+                }
+            }
+            
+            zenCtx.stroke();
+        }
+        
+        // Tool selection
+        document.querySelectorAll('.zen-tool').forEach(tool => {
+            tool.addEventListener('click', function() {
+                document.querySelectorAll('.zen-tool').forEach(t => 
+                    t.classList.remove('selected'));
+                this.classList.add('selected');
+                currentTool = this.dataset.tool;
+            });
+        });
+        
+        // Garden interaction
+        zenCanvas.addEventListener('mousedown', handleZenAction);
+        zenCanvas.addEventListener('mousemove', (e) => {
+            if (e.buttons === 1) handleZenAction(e);
+        });
+        
+        function handleZenAction(e) {
+            const rect = zenCanvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            switch(currentTool) {
+                case 'rake':
+                    rakeSand(x, y);
+                    break;
+                case 'stone':
+                    placeStone(x, y);
+                    break;
+                case 'plant':
+                    placePlant(x, y);
+                    break;
+                case 'clear':
+                    clearArea(x, y);
+                    break;
+            }
+        }
+        
+        function rakeSand(x, y) {
+            if (lastRakeX && lastRakeY) {
+                zenCtx.strokeStyle = '#d9c88e';
+                zenCtx.lineWidth = 2;
+                zenCtx.beginPath();
+                zenCtx.moveTo(lastRakeX, lastRakeY);
+                zenCtx.lineTo(x, y);
+                zenCtx.stroke();
+                
+                // Add some randomness to make it look more natural
+                for (let i = 0; i < 3; i++) {
+                    const offsetX = (Math.random() - 0.5) * 10;
+                    const offsetY = (Math.random() - 0.5) * 10;
+                    zenCtx.beginPath();
+                    zenCtx.moveTo(lastRakeX + offsetX, lastRakeY + offsetY);
+                    zenCtx.lineTo(x + offsetX, y + offsetY);
+                    zenCtx.stroke();
+                }
+            }
+            
+            lastRakeX = x;
+            lastRakeY = y;
+            
+            zenElementsCount++;
+            updateZenStats();
+        }
+        
+        function placeStone(x, y) {
+            const size = Math.random() * 20 + 10;
+            const gray = Math.floor(Math.random() * 60 + 100);
+            
+            zenCtx.fillStyle = `rgb(${gray}, ${gray}, ${gray})`;
+            zenCtx.beginPath();
+            zenCtx.arc(x, y, size, 0, Math.PI * 2);
+            zenCtx.fill();
+            
+            // Add some texture
+            zenCtx.fillStyle = `rgb(${gray-20}, ${gray-20}, ${gray-20})`;
+            for (let i = 0; i < 5; i++) {
+                const dotX = x + (Math.random() - 0.5) * size;
+                const dotY = y + (Math.random() - 0.5) * size;
+                const dotSize = Math.random() * 3 + 1;
+                zenCtx.beginPath();
+                zenCtx.arc(dotX, dotY, dotSize, 0, Math.PI * 2);
+                zenCtx.fill();
+            }
+            
+            zenElementsCount++;
+            updateZenStats();
+        }
+        
+        function placePlant(x, y) {
+            const plantType = Math.floor(Math.random() * 3);
+            const size = Math.random() * 30 + 20;
+            const green = Math.floor(Math.random() * 100 + 100);
+            
+            zenCtx.fillStyle = `rgb(120, ${green}, 80)`;
+            
+            if (plantType === 0) {
+                // Simple bush
+                zenCtx.beginPath();
+                zenCtx.arc(x, y, size, 0, Math.PI * 2);
+                zenCtx.fill();
+            } else if (plantType === 1) {
+                // Bamboo
+                zenCtx.fillStyle = `rgb(100, ${green}, 70)`;
+                zenCtx.fillRect(x - 3, y - size, 6, size);
+                
+                // Leaves
+                zenCtx.fillStyle = `rgb(80, ${green + 20}, 60)`;
+                for (let i = 0; i < 3; i++) {
+                    const leafY = y - size + (i * (size / 2));
+                    drawLeaf(x, leafY, size / 2);
+                }
+            } else {
+                // Cherry blossom
+                zenCtx.fillStyle = `rgb(150, 80, 80)`;
+                zenCtx.fillRect(x - 2, y - size/2, 4, size/2);
+                
+                // Blossoms
+                zenCtx.fillStyle = `rgb(255, 200, 220)`;
+                for (let i = 0; i < 5; i++) {
+                    const blossomX = x + (Math.random() - 0.5) * size;
+                    const blossomY = y - size/2 + (Math.random() * size/2);
+                    zenCtx.beginPath();
+                    zenCtx.arc(blossomX, blossomY, 3, 0, Math.PI * 2);
+                    zenCtx.fill();
+                }
+            }
+            
+            zenElementsCount++;
+            updateZenStats();
+        }
+        
+        function drawLeaf(x, y, size) {
+            zenCtx.beginPath();
+            zenCtx.moveTo(x, y);
+            zenCtx.quadraticCurveTo(x + size, y - size/2, x, y - size);
+            zenCtx.quadraticCurveTo(x - size, y - size/2, x, y);
+            zenCtx.fill();
+        }
+        
+        function clearArea(x, y) {
+            const size = 30;
+            zenCtx.save();
+            zenCtx.beginPath();
+            zenCtx.arc(x, y, size, 0, Math.PI * 2);
+            zenCtx.clip();
+            
+            // Redraw sand background
+            const gradient = zenCtx.createLinearGradient(0, 0, zenCanvas.width, zenCanvas.height);
+            gradient.addColorStop(0, '#f5e6b8');
+            gradient.addColorStop(1, '#e8d49a');
+            zenCtx.fillStyle = gradient;
+            zenCtx.fillRect(x - size, y - size, size * 2, size * 2);
+            
+            zenCtx.restore();
+            
+            zenElementsCount++;
+            updateZenStats();
+        }
+        
+        function updateZenStats() {
+            document.getElementById('zenElements').textContent = zenElementsCount;
+            document.getElementById('zenCalm').textContent = 
+                Math.min(100, Math.floor(zenElementsCount / 5)) + '%';
+        }
+        
+        function updateZenTimer() {
+            const elapsed = Math.floor((Date.now() - zenStartTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            document.getElementById('zenTime').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // New garden
+        document.getElementById('newZenGarden').addEventListener('click', function() {
+            initZenGarden();
+            zenStartTime = Date.now();
+        });
+        
+        // Save garden
+        document.getElementById('saveZenGarden').addEventListener('click', function() {
+            const link = document.createElement('a');
+            link.download = 'zen-garden.png';
+            link.href = zenCanvas.toDataURL('image/png');
+            link.click();
+        });
+        
+        // Ambient music toggle
+        document.getElementById('zenMusic').addEventListener('click', function() {
+            isZenMusicPlaying = !isZenMusicPlaying;
+            this.innerHTML = isZenMusicPlaying ? 
+                '<i class="fas fa-volume-mute"></i> Mute Music' : 
+                '<i class="fas fa-music"></i> Ambient Music';
+            // In a real implementation, you would play/pause audio here
+        });
+        
+        // Initialize
+        initZenGarden();
+        zenInterval = setInterval(updateZenTimer, 1000);
+        
+        // ======================
+        // MOOD MANDALA CREATOR
+        // ======================
+        const mandalaCanvas = document.getElementById('mandalaCanvas');
+        const mandalaCtx = mandalaCanvas.getContext('2d');
+        let complexity = 8;
+        let mood = 2; // 0=angry, 1=sad, 2=neutral, 3=happy, 4=excited
+        let isAnimating = false;
+        let animationFrame;
+        
+        const moodColors = [
+            ['#ff0000', '#990000', '#660000'], // Angry
+            ['#0000ff', '#000099', '#000066'], // Sad
+            ['#6a5acd', '#8e7dff', '#483d8b'], // Neutral
+            ['#00ff00', '#009900', '#006600'], // Happy
+            ['#ffff00', '#ff9900', '#ff6600']  // Excited
+        ];
+        
+        function drawMandala() {
+            mandalaCtx.clearRect(0, 0, mandalaCanvas.width, mandalaCanvas.height);
+            
+            const centerX = mandalaCanvas.width / 2;
+            const centerY = mandalaCanvas.height / 2;
+            const maxRadius = Math.min(centerX, centerY) - 20;
+            
+            // Draw layers based on complexity
+            for (let layer = 1; layer <= complexity / 2; layer++) {
+                const radius = (maxRadius * layer) / (complexity / 2);
+                const segments = complexity + layer * 2;
+                
+                // Base circle
+                mandalaCtx.strokeStyle = moodColors[mood][0];
+                mandalaCtx.lineWidth = 2;
+                mandalaCtx.beginPath();
+                mandalaCtx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                mandalaCtx.stroke();
+                
+                // Decorative elements
+                for (let i = 0; i < segments; i++) {
+                    const angle = (i / segments) * Math.PI * 2;
+                    const x = centerX + Math.cos(angle) * radius;
+                    const y = centerY + Math.sin(angle) * radius;
+                    
+                    // Alternate colors
+                    const colorIndex = i % moodColors[mood].length;
+                    mandalaCtx.fillStyle = moodColors[mood][colorIndex];
+                    
+                    // Draw different shapes based on layer
+                    if (layer % 2 === 0) {
+                        // Petals
+                        const petalSize = radius * 0.3;
+                        mandalaCtx.beginPath();
+                        mandalaCtx.ellipse(
+                            x, y, 
+                            petalSize, petalSize * 0.5, 
+                            angle, 0, Math.PI * 2
+                        );
+                        mandalaCtx.fill();
+                    } else {
+                        // Dots or other shapes
+                        const dotSize = radius * 0.1;
+                        mandalaCtx.beginPath();
+                        mandalaCtx.arc(x, y, dotSize, 0, Math.PI * 2);
+                        mandalaCtx.fill();
+                    }
+                }
+            }
+            
+            // Update stats
+            document.getElementById('mandalaColors').textContent = moodColors[mood].length;
+            document.getElementById('mandalaLayers').textContent = Math.floor(complexity / 2);
+            document.getElementById('mandalaHarmony').textContent = 
+                Math.floor(70 + (mood * 5) + (complexity * 1.5)) + '%';
+        }
+        
+        // Complexity slider
+        document.getElementById('mandalaComplexity').addEventListener('input', function() {
+            complexity = parseInt(this.value);
+            document.getElementById('complexityValue').textContent = complexity;
+            drawMandala();
+        });
+        
+        // Mood slider
+        document.getElementById('mandalaMood').addEventListener('input', function() {
+            mood = parseInt(this.value);
+            const moods = ['Angry', 'Sad', 'Neutral', 'Happy', 'Excited'];
+            document.getElementById('moodValue').textContent = moods[mood];
+            drawMandala();
+        });
+        
+        // Randomize
+        document.getElementById('randomizeMandala').addEventListener('click', function() {
+            complexity = Math.floor(Math.random() * 15) + 5;
+            mood = Math.floor(Math.random() * 5);
+            
+            document.getElementById('mandalaComplexity').value = complexity;
+            document.getElementById('complexityValue').textContent = complexity;
+            
+            document.getElementById('mandalaMood').value = mood;
+            const moods = ['Angry', 'Sad', 'Neutral', 'Happy', 'Excited'];
+            document.getElementById('moodValue').textContent = moods[mood];
+            
+            drawMandala();
+        });
+        
+        // Animate
+        document.getElementById('animateMandala').addEventListener('click', function() {
+            isAnimating = !isAnimating;
+            this.innerHTML = isAnimating ? 
+                '<i class="fas fa-pause"></i> Pause' : 
+                '<i class="fas fa-play"></i> Animate';
+            
+            if (isAnimating) {
+                animateMandala();
+            } else {
+                cancelAnimationFrame(animationFrame);
+            }
+        });
+        
+        function animateMandala() {
+            complexity = (complexity % 15) + 3;
+            mood = (mood + 1) % 5;
+            
+            document.getElementById('mandalaComplexity').value = complexity;
+            document.getElementById('complexityValue').textContent = complexity;
+            
+            document.getElementById('mandalaMood').value = mood;
+            const moods = ['Angry', 'Sad', 'Neutral', 'Happy', 'Excited'];
+            document.getElementById('moodValue').textContent = moods[mood];
+            
+            drawMandala();
+            
+            if (isAnimating) {
+                animationFrame = requestAnimationFrame(animateMandala);
+            }
+        }
+        
+        // Save
+        document.getElementById('saveMandala').addEventListener('click', function() {
+            const link = document.createElement('a');
+            link.download = 'mandala.png';
+            link.href = mandalaCanvas.toDataURL('image/png');
+            link.click();
+        });
+        
+        // Print
+        document.getElementById('printMandala').addEventListener('click', function() {
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html><head><title>Your Mandala</title></head>
+                <body style="text-align: center;">
+                    <h1>Your Therapeutic Mandala</h1>
+                    <img src="${mandalaCanvas.toDataURL('image/png')}" 
+                         style="max-width: 100%; height: auto;">
+                    <p>Created with Mental Health AI</p>
+                </body></html>
+            `);
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => printWindow.print(), 500);
+        });
+        
+        // Initialize
+        drawMandala();
+        
+        // ======================
+        // SOUNDSCAPE COMPOSER
+        // ======================
+        let isSoundscapePlaying = false;
+        let activeSoundsCount = 0;
+        let soundscapeStartTime = Date.now();
+        let soundscapeInterval;
+        
+        // Sound sliders
+        document.querySelectorAll('.sound-slider').forEach(slider => {
+            slider.addEventListener('input', function() {
+                const value = parseInt(this.value);
+                const sound = this.dataset.sound;
+                
+                // Update active sounds count
+                if (value > 0 && parseInt(this.previousValue || 0) === 0) {
+                    activeSoundsCount++;
+                } else if (value === 0 && parseInt(this.previousValue || 0) > 0) {
+                    activeSoundsCount--;
+                }
+                
+                this.previousValue = value;
+                updateSoundscapeStats();
+                
+                // In a real implementation, you would adjust volume here
+                // e.g.: sounds[sound].volume = value / 100;
+            });
+        });
+        
+        function updateSoundscapeStats() {
+            document.getElementById('activeSounds').textContent = activeSoundsCount;
+            document.getElementById('soundscapeCalm').textContent = 
+                Math.min(100, activeSoundsCount * 15 + 10) + '%';
+        }
+        
+        function updateSoundscapeTimer() {
+            const elapsed = Math.floor((Date.now() - soundscapeStartTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            document.getElementById('soundscapeTime').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Play/pause
+        document.getElementById('playSoundscape').addEventListener('click', function() {
+            isSoundscapePlaying = !isSoundscapePlaying;
+            
+            if (isSoundscapePlaying) {
+                this.innerHTML = '<i class="fas fa-pause"></i> Pause';
+                document.getElementById('pauseSoundscape').style.display = 'none';
+                soundscapeStartTime = Date.now();
+                soundscapeInterval = setInterval(updateSoundscapeTimer, 1000);
+                // In a real implementation, you would play sounds here
+            } else {
+                this.innerHTML = '<i class="fas fa-play"></i> Play';
+                document.getElementById('pauseSoundscape').style.display = 'inline-flex';
+                clearInterval(soundscapeInterval);
+                // In a real implementation, you would pause sounds here
+            }
+        });
+        
+        document.getElementById('pauseSoundscape').addEventListener('click', function() {
+            isSoundscapePlaying = false;
+            document.getElementById('playSoundscape').innerHTML = '<i class="fas fa-play"></i> Play';
+            clearInterval(soundscapeInterval);
+            // In a real implementation, you would pause sounds here
+        });
+        
+        // Save mix
+        document.getElementById('saveSoundscape').addEventListener('click', function() {
+            const mixName = prompt("Name your sound mix:", "My Relaxation Mix");
+            if (mixName) {
+                alert(`Mix "${mixName}" saved! (In a real implementation, this would save your settings)`);
+            }
+        });
+        
+        // Initialize
+        updateSoundscapeStats();
+        
+        // ======================
+        // MINDFUL COLORING GAME
+        // ======================
+        const coloringCanvas = document.getElementById('coloringCanvas');
+        const coloringCtx = coloringCanvas.getContext('2d');
+        let isDrawing = false;
+        let currentColor = '#6a5acd';
+        let brushSize = 8;
+        let strokeCount = 0;
+        let coloringStartTime = Date.now();
+        let coloringInterval;
+        
+        // Initialize canvas
+        function initColoringCanvas() {
+            coloringCtx.fillStyle = 'white';
+            coloringCtx.fillRect(0, 0, coloringCanvas.width, coloringCanvas.height);
+            drawMandalaGuide();
+        }
+        
+        // Draw a simple mandala-like guide
+        function drawMandalaGuide() {
+            coloringCtx.strokeStyle = '#f0f0f0';
+            coloringCtx.lineWidth = 1;
+            
+            // Circles
+            coloringCtx.beginPath();
+            coloringCtx.arc(coloringCanvas.width/2, coloringCanvas.height/2, 50, 0, Math.PI * 2);
+            coloringCtx.stroke();
+            
+            coloringCtx.beginPath();
+            coloringCtx.arc(coloringCanvas.width/2, coloringCanvas.height/2, 100, 0, Math.PI * 2);
+            coloringCtx.stroke();
+            
+            coloringCtx.beginPath();
+            coloringCtx.arc(coloringCanvas.width/2, coloringCanvas.height/2, 150, 0, Math.PI * 2);
+            coloringCtx.stroke();
+            
+            // Petals/design elements
+            for (let i = 0; i < 8; i++) {
+                const angle = (i / 8) * Math.PI * 2;
+                coloringCtx.beginPath();
+                coloringCtx.moveTo(coloringCanvas.width/2, coloringCanvas.height/2);
+                coloringCtx.lineTo(
+                    coloringCanvas.width/2 + Math.cos(angle) * 180,
+                    coloringCanvas.height/2 + Math.sin(angle) * 180
+                );
+                coloringCtx.stroke();
+            }
+        }
+        
+        // Start drawing
+        coloringCanvas.addEventListener('mousedown', startDrawing);
+        coloringCanvas.addEventListener('touchstart', startDrawing);
+        
+        // Draw
+        coloringCanvas.addEventListener('mousemove', draw);
+        coloringCanvas.addEventListener('touchmove', draw);
+        
+        // Stop drawing
+        coloringCanvas.addEventListener('mouseup', stopDrawing);
+        coloringCanvas.addEventListener('mouseout', stopDrawing);
+        coloringCanvas.addEventListener('touchend', stopDrawing);
+        
+        function startDrawing(e) {
+            isDrawing = true;
+            strokeCount++;
+            document.getElementById('brushStrokes').textContent = strokeCount;
+            document.getElementById('coloringRelax').textContent = 
+                Math.min(100, Math.floor(strokeCount / 5)) + '%';
+            draw(e);
+        }
+        
+        function draw(e) {
+            if (!isDrawing) return;
+            
+            e.preventDefault();
+            
+            // Get mouse/touch position
+            const rect = coloringCanvas.getBoundingClientRect();
+            let x, y;
+            
+            if (e.type.includes('touch')) {
+                x = e.touches[0].clientX - rect.left;
+                y = e.touches[0].clientY - rect.top;
+            } else {
+                x = e.clientX - rect.left;
+                y = e.clientY - rect.top;
+            }
+            
+            coloringCtx.lineJoin = 'round';
+            coloringCtx.lineCap = 'round';
+            coloringCtx.strokeStyle = currentColor;
+            coloringCtx.lineWidth = brushSize;
+            
+            coloringCtx.lineTo(x, y);
+            coloringCtx.stroke();
+            coloringCtx.beginPath();
+            coloringCtx.moveTo(x, y);
+        }
+        
+        function stopDrawing() {
+            isDrawing = false;
+            coloringCtx.beginPath();
+        }
+        
+        // Color selection
+        document.querySelectorAll('.color-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.color-option').forEach(opt => 
+                    opt.classList.remove('selected'));
+                this.classList.add('selected');
+                currentColor = this.dataset.color;
+            });
+        });
+        
+        // Brush size
+        document.getElementById('brushSize').addEventListener('input', function() {
+            brushSize = this.value;
+            document.getElementById('brushSizeValue').textContent = brushSize;
+        });
+        
+        // New design
+        document.getElementById('newColoring').addEventListener('click', function() {
+            initColoringCanvas();
+            strokeCount = 0;
+            document.getElementById('brushStrokes').textContent = '0';
+            document.getElementById('coloringRelax').textContent = '0%';
+            coloringStartTime = Date.now();
+        });
+        
+        // Clear canvas
+        document.getElementById('clearColoring').addEventListener('click', function() {
+            coloringCtx.clearRect(0, 0, coloringCanvas.width, coloringCanvas.height);
+            initColoringCanvas();
+            strokeCount = 0;
+            document.getElementById('brushStrokes').textContent = '0';
+            document.getElementById('coloringRelax').textContent = '0%';
+        });
+        
+        // Save artwork
+        document.getElementById('saveColoring').addEventListener('click', function() {
+            const link = document.createElement('a');
+            link.download = 'mindful-coloring.png';
+            link.href = coloringCanvas.toDataURL('image/png');
+            link.click();
+        });
+        
+        // Timer
+        function updateColoringTimer() {
+            const elapsed = Math.floor((Date.now() - coloringStartTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            document.getElementById('coloringTime').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Initialize
+        initColoringCanvas();
+        coloringInterval = setInterval(updateColoringTimer, 1000);
+        
+        // ======================
+        // BREATHING EXERCISE
+        // ======================
+        const breathingCircle = document.getElementById('breathingCircle');
+        const breathingInstruction = document.getElementById('breathingInstruction');
+        let breathingInterval;
+        let isBreathing = false;
+        let cyclePhase = 0; // 0=inhale, 1=hold, 2=exhale
+        let cycleCount = 0;
+        let totalBreaths = 0;
+        let timer = 0;
+        const phases = [
+            { text: "Breathe In", instruction: "Inhale deeply through your nose", duration: 4, color: "#66b3ff" },
+            { text: "Hold", instruction: "Hold your breath", duration: 7, color: "#8e7dff" },
+            { text: "Breathe Out", instruction: "Exhale slowly through pursed lips", duration: 8, color: "#ff6b6b" }
+        ];
+        
+        function updateBreathing() {
+            const phase = phases[cyclePhase];
+            const progress = timer / phase.duration;
+            
+            breathingCircle.textContent = phase.text + ` (${Math.ceil(phase.duration - timer)})`;
+            breathingInstruction.textContent = phase.instruction;
+            breathingCircle.style.background = `linear-gradient(45deg, ${phase.color}, ${phase.color}00)`;
+            breathingCircle.style.transform = `scale(${cyclePhase === 0 ? 1 + progress * 0.5 : 
+                                                 cyclePhase === 2 ? 1.5 - progress * 0.5 : 1.5})`;
+            
+            // Simulate heart rate changes
+            const heartRateEl = document.getElementById('heartRateSim');
+            if (cyclePhase === 0) {
+                heartRateEl.textContent = Math.floor(72 + progress * 10);
+            } else if (cyclePhase === 2) {
+                heartRateEl.textContent = Math.floor(82 - progress * 10);
+            }
+            
+            timer += 0.1;
+            
+            if (timer >= phase.duration) {
+                timer = 0;
+                cyclePhase = (cyclePhase + 1) % 3;
+                if (cyclePhase === 0) {
+                    cycleCount++;
+                    totalBreaths++;
+                    document.getElementById('breathCycles').textContent = cycleCount;
+                    document.getElementById('totalBreaths').textContent = totalBreaths;
+                }
+                
+                if (cycleCount >= 3) {
+                    stopBreathing();
+                    breathingCircle.textContent = "Complete!";
+                    breathingInstruction.textContent = "Great job! Notice how you feel";
+                    breathingCircle.style.background = "linear-gradient(45deg, #8fd694, #6a5acd)";
+                    setTimeout(() => {
+                        if (!isBreathing) {
+                            breathingCircle.textContent = "Ready";
+                            breathingInstruction.textContent = "Click 'Start' to begin";
+                            breathingCircle.style.transform = "scale(1)";
+                            breathingCircle.style.background = "linear-gradient(45deg, #66b3ff, #3385ff)";
+                        }
+                    }, 3000);
+                }
+            }
+        }
+        
+        function startBreathing() {
+            if (!isBreathing) {
+                isBreathing = true;
+                cyclePhase = 0;
+                cycleCount = 0;
+                timer = 0;
+                breathingInterval = setInterval(updateBreathing, 100);
+                document.getElementById('startBreathing').innerHTML = '<i class="fas fa-sync-alt"></i> Restart';
+                document.getElementById('pauseBreathing').innerHTML = '<i class="fas fa-pause"></i> Pause';
+            } else {
+                // Restart
+                stopBreathing();
+                startBreathing();
+            }
+        }
+        
+        function stopBreathing() {
+            clearInterval(breathingInterval);
+            isBreathing = false;
+        }
+        
+        document.getElementById('startBreathing').addEventListener('click', startBreathing);
+        document.getElementById('pauseBreathing').addEventListener('click', function() {
+            if (isBreathing) {
+                stopBreathing();
+                this.innerHTML = '<i class="fas fa-play"></i> Resume';
+            } else {
+                startBreathing();
+                this.innerHTML = '<i class="fas fa-pause"></i> Pause';
+            }
+        });
+        
+        document.getElementById('completeBreathing').addEventListener('click', function() {
+            if (!isBreathing) {
+                cycleCount = 2; // Will complete on next cycle
+                startBreathing();
+            }
+        });
+        
+        // ======================
+        // PATTERN MATCHING GAME
+        // ======================
+        const patternGrid = document.getElementById('patternGrid');
+        const patternMessage = document.getElementById('patternMessage');
+        let patternSequence = [];
+        let userPattern = [];
+        let patternLevel = 1;
+        let patternScore = 0;
+        let isShowingPattern = false;
+        let isPatternGameRunning = false;
+        
+        // Initialize grid
+        for (let i = 0; i < 16; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'pattern-cell';
+            cell.dataset.index = i;
+            cell.addEventListener('click', handlePatternClick);
+            patternGrid.appendChild(cell);
+        }
+        
+        function startPatternGame() {
+            patternLevel = 1;
+            patternScore = 0;
+            updatePatternStats();
+            generateNewPattern();
+            document.getElementById('startPattern').textContent = 'Restart Game';
+            document.getElementById('nextLevel').disabled = true;
+            isPatternGameRunning = true;
+        }
+        
+        function generateNewPattern() {
+            patternSequence = [];
+            userPattern = [];
+            const sequenceLength = 2 + patternLevel;
+            
+            for (let i = 0; i < sequenceLength; i++) {
+                patternSequence.push(Math.floor(Math.random() * 16));
+            }
+            
+            showPattern();
+        }
+        
+        function showPattern() {
+            isShowingPattern = true;
+            patternMessage.textContent = "Watch the pattern...";
+            disableCells();
+            
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i >= patternSequence.length) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        resetCells();
+                        patternMessage.textContent = "Your turn! Repeat the pattern";
+                        isShowingPattern = false;
+                        enableCells();
+                    }, 1000);
+                    return;
+                }
+                
+                const cell = patternGrid.children[patternSequence[i]];
+                cell.classList.add('active');
+                setTimeout(() => {
+                    cell.classList.remove('active');
+                }, 500);
+                
+                i++;
+            }, 800);
+        }
+        
+        function handlePatternClick(e) {
+            if (isShowingPattern || !isPatternGameRunning) return;
+            
+            const clickedIndex = parseInt(e.target.dataset.index);
+            userPattern.push(clickedIndex);
+            
+            // Visual feedback
+            e.target.classList.add('active');
+            setTimeout(() => {
+                e.target.classList.remove('active');
+            }, 300);
+            
+            // Check if correct
+            if (userPattern[userPattern.length - 1] !== patternSequence[userPattern.length - 1]) {
+                patternMessage.textContent = "Oops! Try again";
+                setTimeout(() => {
+                    userPattern = [];
+                    showPattern();
+                }, 1500);
+                return;
+            }
+            
+            // Check if completed sequence
+            if (userPattern.length === patternSequence.length) {
+                patternScore += patternLevel * 10;
+                patternLevel++;
+                updatePatternStats();
+                patternMessage.textContent = "Correct! Next level...";
+                document.getElementById('nextLevel').disabled = false;
+            }
+        }
+        
+        function nextPatternLevel() {
+            generateNewPattern();
+            document.getElementById('nextLevel').disabled = true;
+        }
+        
+        function updatePatternStats() {
+            document.getElementById('patternLevel').textContent = patternLevel;
+            document.getElementById('patternLength').textContent = 2 + patternLevel;
+            document.getElementById('patternScore').textContent = patternScore;
+        }
+        
+        function disableCells() {
+            Array.from(patternGrid.children).forEach(cell => {
+                cell.style.pointerEvents = 'none';
+            });
+        }
+        
+        function enableCells() {
+            Array.from(patternGrid.children).forEach(cell => {
+                cell.style.pointerEvents = 'auto';
+            });
+        }
+        
+        function resetCells() {
+            Array.from(patternGrid.children).forEach(cell => {
+                cell.classList.remove('active');
+            });
+        }
+        
+        // Pattern Game Event Listeners
+        document.getElementById('startPattern').addEventListener('click', startPatternGame);
+        document.getElementById('nextLevel').addEventListener('click', nextPatternLevel);
+        document.getElementById('showHint').addEventListener('click', function() {
+            if (isPatternGameRunning && !isShowingPattern) {
+                patternMessage.textContent = "Sequence length: " + patternSequence.length;
+                setTimeout(() => {
+                    if (!isShowingPattern) {
+                        patternMessage.textContent = "Your turn! Repeat the pattern";
+                    }
+                }, 2000);
+            }
+        });
+        
+        // Initialize pattern grid
+        resetCells();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | Mental Health AI Companion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Cropper.js CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+    <style>
+        /* Navigation Bar - Updated dimensions */
+        nav {
+            background: linear-gradient(135deg, #6a5acd, #483d8b);
+            padding: 15px 3%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            position: fixed;
+            width: 94%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo img {
+            height: 35px;
+            margin-right: 8px;
+        }
+
+        .logo span {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(to right, #ffffff, #ffcc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 5px 0;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+            flex-shrink: 0;
+            padding: 5px 8px;
+        }
+
+        .nav-links a:hover {
+            color: #ffcc00;
+            transform: translateY(-2px);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #ffcc00;
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Notification Bell Animation */
+        .fa-bell {
+            animation: bell-shake 1.5s infinite alternate;
+            transform-origin: top center;
+        }
+
+        @keyframes bell-shake {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            50% { transform: rotate(-10deg); }
+            75% { transform: rotate(5deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        /* Search Bar - Fixed positioning */
+        .search-container {
+            position: relative;
+            height: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar {
+            position: fixed;
+            right: 3%;
+            top: 70px;
+            width: 300px;
+            display: none;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .search-bar.active {
+            display: block;
+        }
+
+        .search-input-container {
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 2px solid #e0e0e0;
+            border-radius: 30px;
+            font-family: 'Poppins', sans-serif;
+            outline: none;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .search-bar input:focus {
+            border-color: #6a5acd;
+            box-shadow: 0 0 10px rgba(106, 90, 205, 0.3);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6a5acd;
+        }
+
+        .search-results {
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .search-result-item {
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .search-result-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .search-result-item i {
+            margin-right: 10px;
+            color: #6a5acd;
+        }
+
+        .search-result-item .result-text {
+            flex: 1;
+        }
+
+        .search-result-item .result-category {
+            font-size: 0.8rem;
+            color: #888;
+            margin-left: 10px;
+        }
+
+        .no-results {
+            padding: 10px;
+            color: #666;
+            text-align: center;
+        }
+
+        .search-result-item.highlighted {
+            background-color: #e6e6fa;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Settings Page Specific Styles (unchanged) */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding-top: 80px;
+            min-height: 100vh;
+        }
+
+        .settings-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 50px;
+        }
+
+        .settings-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .settings-header h1 {
+            color: #6a5acd;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .settings-header h1::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 4px;
+            background: linear-gradient(to right, #6a5acd, #ff9800);
+            bottom: -10px;
+            left: 25%;
+            border-radius: 2px;
+        }
+
+        .settings-header p {
+            color: #666;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .settings-section {
+            margin-bottom: 40px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 30px;
+        }
+
+        .settings-section:last-child {
+            border-bottom: none;
+        }
+
+        .settings-section h2 {
+            color: #6a5acd;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .settings-section h2 i {
+            margin-right: 15px;
+            font-size: 1.3rem;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-info h3 {
+            font-size: 1.1rem;
+            color: #444;
+            margin-bottom: 5px;
+        }
+
+        .setting-info p {
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #6a5acd;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(30px);
+        }
+
+        .select-dropdown {
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            font-family: 'Poppins', sans-serif;
+            background-color: white;
+            color: #333;
+            min-width: 200px;
+        }
+
+        .select-dropdown:focus {
+            border-color: #6a5acd;
+            outline: none;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            border-radius: 8px;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #6a5acd, #483d8b);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #483d8b, #6a5acd);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 90, 205, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #ff5252, #ff0000);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(45deg, #ff0000, #ff5252);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.2);
+        }
+
+        .avatar-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            overflow: hidden;
+            border: 3px solid #6a5acd;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .avatar-placeholder {
+            font-size: 2.5rem;
+            color: #6a5acd;
+        }
+
+        .avatar-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .submit-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(45deg, #6a5acd, #483d8b);
+            color: white;
+            padding: 12px 40px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(106, 90, 205, 0.3);
+        }
+
+        .btn-submit:hover {
+            background: linear-gradient(45deg, #483d8b, #6a5acd);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(106, 90, 205, 0.4);
+        }
+
+        /* Profile page styles */
+        .profile-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            margin-bottom: 50px;
+            display: none;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 30px;
+            overflow: hidden;
+            border: 3px solid #6a5acd;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .profile-avatar .avatar-placeholder {
+            font-size: 3rem;
+            color: #6a5acd;
+        }
+
+        .profile-info h1 {
+            color: #6a5acd;
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .profile-info p {
+            color: #777;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #6a5acd;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .profile-content {
+            border-top: 1px solid #eee;
+            padding-top: 30px;
+        }
+
+        .profile-section h2 {
+            color: #6a5acd;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-section h2 i {
+            margin-right: 15px;
+            font-size: 1.3rem;
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-color: #222;
+            color: #eee;
+        }
+
+        body.dark-mode .settings-container,
+        body.dark-mode .profile-container {
+            background-color: #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        body.dark-mode .settings-section h2,
+        body.dark-mode .profile-section h2 {
+            color: #9d8aff;
+        }
+
+        body.dark-mode .setting-info h3,
+        body.dark-mode .profile-info h1 {
+            color: #ddd;
+        }
+
+        body.dark-mode .setting-info p,
+        body.dark-mode .profile-info p {
+            color: #aaa;
+        }
+
+        body.dark-mode .setting-item,
+        body.dark-mode .profile-content {
+            border-bottom-color: #444;
+            border-top-color: #444;
+        }
+
+        body.dark-mode .select-dropdown {
+            background-color: #444;
+            color: #eee;
+            border-color: #555;
+        }
+
+        /* Image Cropper Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 700px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .cropper-container {
+            width: 100%;
+            height: 400px;
+            margin: 20px 0;
+        }
+
+        .crop-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .settings-container,
+            .profile-container {
+                padding: 20px;
+                margin: 20px;
+            }
+
+            .setting-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .toggle-switch {
+                align-self: flex-end;
+            }
+
+            .search-bar {
+                width: 250px;
+                right: 10px;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-avatar {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+
+            .profile-stats {
+                justify-content: center;
+            }
+
+            .modal-content {
+                width: 90%;
+                margin: 10% auto;
+            }
+
+            .cropper-container {
+                height: 300px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .settings-header h1,
+            .profile-info h1 {
+                font-size: 2rem;
+            }
+
+            .avatar-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .avatar {
+                margin-bottom: 15px;
+            }
+
+            .search-bar {
+                width: 200px;
+                right: 10px;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 15px;
+            }
+
+            .cropper-container {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo">
+            <img src="https://img.icons8.com/ios/100/000000/melting-ice-cream.png" alt="Mental Health AI Logo">
+            <span>Mental Health AI</span>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}"><i class="fa-solid fa-house" aria-hidden="true" style="margin-right: 5px;"></i></i>Home</a>
+            <a href="{{ url_for('notification') }}"><i class="fa-solid fa-bell"></i> <span>Notifications</span></a>
+            <div class="search-container">
+                <a href="#" id="search-toggle"><i class="fa-solid fa-magnifying-glass"></i> <span>Search</span></a>
+                <div class="search-bar" id="search-bar">
+                    <div class="search-input-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="search-input" placeholder="Search features, articles...">
+                    </div>
+                    <div class="search-results" id="search-results">
+                        <!-- Results will be inserted here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            <a href="#" class="active"><i class="fa-solid fa-gear"></i> <span>Settings</span></a>
+        </div>
+    </nav>
+
+    <!-- Settings Content -->
+    <div class="settings-container" id="settings-container">
+        <div class="settings-header">
+            <h1>Account Settings</h1>
+            <p>Customize your Mental Health AI Companion experience to suit your preferences</p>
+        </div>
+
+        <!-- Profile Section -->
+        <div class="settings-section">
+            <h2><i class="fas fa-user-cog"></i> Profile Settings</h2>
+            
+            <div class="avatar-container">
+                <div class="avatar" id="avatar-container">
+                    <div class="avatar-placeholder" id="avatar-placeholder">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <img id="avatar-image" src="" alt="Profile Picture">
+                </div>
+                <div class="avatar-actions">
+                    <button class="btn btn-primary" id="upload-btn">Upload Photo</button>
+                    <button class="btn btn-danger" id="remove-btn">Remove</button>
+                    <input type="file" id="file-input" accept="image/*" style="display: none;">
+                </div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h3>Display Name</h3>
+                    <p>How your name appears to you and others</p>
+                </div>
+                <input type="text" class="select-dropdown" id="display-name" value="Alex Johnson">
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h3>Email Address</h3>
+                    <p>Your account email for notifications</p>
+                </div>
+                <input type="email" class="select-dropdown" id="email-address" value="alex.johnson@example.com">
+            </div>
+        </div>
+
+        <!-- Preferences Section -->
+        <div class="settings-section">
+            <h2><i class="fas fa-sliders-h"></i> Preferences</h2>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h3>Dark Mode</h3>
+                    <p>Toggle between light and dark theme</p>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="dark-mode-toggle">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h3>Notification Sound</h3>
+                    <p>Enable or disable sound for notifications</p>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="notification-sound" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h3>Daily Reminders</h3>
+                    <p>Receive daily mental health check-in reminders</p>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="daily-reminders" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Privacy Section -->
+        <div class="settings-section">
+            <h2><i class="fas fa-lock"></i> Privacy & Security</h2>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h3>Activity Status</h3>
+                    <p>Show when you're active in the community</p>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="activity-status" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h3>Two-Factor Authentication</h3>
+                    <p>Add an extra layer of security to your account</p>
+                </div>
+                <button class="btn btn-primary" id="two-factor-btn">Enable</button>
+            </div>
+        </div>
+
+        <!-- Account Management -->
+        <div class="settings-section">
+            <h2><i class="fas fa-cog"></i> Account Management</h2>
+            
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h3>Language</h3>
+                    <p>Change the display language</p>
+                </div>
+                <select class="select-dropdown" id="language-select">
+                    <option>English</option>
+                    <option>Spanish</option>
+                    <option>French</option>
+                    <option>German</option>
+                    <option>Japanese</option>
+                </select>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h3>Export Data</h3>
+                    <p>Download all your mental health data</p>
+                </div>
+                <button class="btn btn-primary" id="export-btn">Export</button>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h3>Delete Account</h3>
+                    <p>Permanently remove your account and all data</p>
+                </div>
+                <button class="btn btn-danger" id="delete-btn">Delete Account</button>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="submit-container">
+            <button class="btn btn-submit" id="submit-btn">Save Changes</button>
+        </div>
+    </div>
+
+    <!-- Profile Page (hidden by default) -->
+    <div class="profile-container" id="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar" id="profile-avatar">
+                <div class="avatar-placeholder" id="profile-avatar-placeholder">
+                    <i class="fas fa-user"></i>
+                </div>
+                <img id="profile-avatar-image" src="" alt="Profile Picture">
+            </div>
+            <div class="profile-info">
+                <h1 id="profile-name">Alex Johnson</h1>
+                <p id="profile-email">alex.johnson@example.com</p>
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">142</div>
+                        <div class="stat-label">Check-ins</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">36</div>
+                        <div class="stat-label">Journal Entries</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Goals Achieved</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="profile-content">
+            <div class="profile-section">
+                <h2><i class="fas fa-heart"></i> Recent Activity</h2>
+                <p>You've been consistent with your mood tracking for the past 2 weeks! Keep it up!</p>
+            </div>
+            
+            <div class="profile-section">
+                <h2><i class="fas fa-trophy"></i> Achievements</h2>
+                <p>• 7-Day Streak • Mindfulness Master • Journaling Enthusiast</p>
+            </div>
+            
+            <div class="profile-section">
+                <h2><i class="fas fa-chart-line"></i> Progress</h2>
+                <p>Your overall well-being has improved by 24% since you started using the app.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Cropper Modal -->
+    <div id="cropModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Crop Your Profile Picture</h2>
+            <div class="cropper-container">
+                <img id="imageToCrop" src="" alt="Image to crop" style="max-width: 100%;">
+            </div>
+            <div class="crop-actions">
+                <button class="btn btn-danger" id="cancel-crop">Cancel</button>
+                <button class="btn btn-primary" id="save-crop">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cropper.js and other scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <script>
+        // Search functionality (same as notification page)
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchToggle = document.getElementById('search-toggle');
+            const searchBar = document.getElementById('search-bar');
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('search-results');
+            
+            // Sample search data - replace with your actual content
+            const searchData = [
+                { title: "Mood Tracker", category: "Feature", icon: "heart", link: "moodtracker.html" },
+                { title: "Journaling", category: "Feature", icon: "book", link: "journaling.html" },
+                { title: "Community Support", category: "Feature", icon: "users", link: "community.html" },
+                { title: "Music Therapy", category: "Feature", icon: "music", link: "music.html" },
+                { title: "Therapeutic Games", category: "Feature", icon: "gamepad", link: "games.html" },
+                { title: "Progress Tracking", category: "Feature", icon: "chart-line", link: "progress.html" },
+                { title: "Stress Management", category: "Article", icon: "leaf", link: "#" },
+                { title: "Anxiety Relief", category: "Article", icon: "cloud", link: "#" },
+                { title: "Settings", category: "Page", icon: "gear", link: "#" },
+                { title: "Profile", category: "Page", icon: "user", link: "#" }
+            ];
+
+            // Toggle search bar
+            searchToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                searchBar.classList.toggle('active');
+                if (searchBar.classList.contains('active')) {
+                    searchInput.focus();
+                }
+            });
+
+            // Close search when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchBar.contains(e.target) && e.target !== searchToggle && !searchToggle.contains(e.target)) {
+                    searchBar.classList.remove('active');
+                }
+            });
+
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                const results = searchData.filter(item => 
+                    item.title.toLowerCase().includes(query) || 
+                    item.category.toLowerCase().includes(query)
+                );
+                
+                displayResults(results);
+            });
+
+            // Keyboard navigation
+            let highlightedIndex = -1;
+            
+            searchInput.addEventListener('keydown', function(e) {
+                const results = document.querySelectorAll('.search-result-item');
+                
+                if (e.key === 'ArrowDown' && results.length > 0) {
+                    e.preventDefault();
+                    highlightedIndex = (highlightedIndex + 1) % results.length;
+                    updateHighlightedItem(results);
+                } else if (e.key === 'ArrowUp' && results.length > 0) {
+                    e.preventDefault();
+                    highlightedIndex = (highlightedIndex - 1 + results.length) % results.length;
+                    updateHighlightedItem(results);
+                } else if (e.key === 'Enter' && highlightedIndex >= 0) {
+                    e.preventDefault();
+                    results[highlightedIndex].click();
+                } else if (e.key === 'Escape') {
+                    searchBar.classList.remove('active');
+                }
+            });
+
+            function updateHighlightedItem(results) {
+                results.forEach((item, index) => {
+                    if (index === highlightedIndex) {
+                        item.classList.add('highlighted');
+                        item.scrollIntoView({ block: 'nearest' });
+                    } else {
+                        item.classList.remove('highlighted');
+                    }
+                });
+            }
+
+            function displayResults(results) {
+                if (searchInput.value.trim() === '') {
+                    searchResults.innerHTML = '';
+                    highlightedIndex = -1;
+                    return;
+                }
+
+                if (results.length === 0) {
+                    searchResults.innerHTML = '<div class="no-results">No results found</div>';
+                    return;
+                }
+
+                searchResults.innerHTML = results.map(item => `
+                    <a href="${item.link}" class="search-result-item">
+                        <i class="fas fa-${item.icon}"></i>
+                        <div class="result-text">${item.title}</div>
+                        <div class="result-category">${item.category}</div>
+                    </a>
+                `).join('');
+
+                // Reset highlighted index when new results are displayed
+                highlightedIndex = -1;
+            }
+
+            // Close search when a result is clicked
+            searchResults.addEventListener('click', function(e) {
+                if (e.target.closest('.search-result-item')) {
+                    searchBar.classList.remove('active');
+                    searchInput.value = '';
+                    searchResults.innerHTML = '';
+                }
+            });
+
+            // Dark mode toggle
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            darkModeToggle.addEventListener('change', function() {
+                document.body.classList.toggle('dark-mode');
+                localStorage.setItem('darkMode', this.checked);
+            });
+
+            // Check for saved dark mode preference
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+                darkModeToggle.checked = true;
+            }
+
+            // Image Cropper functionality
+            const cropModal = document.getElementById('cropModal');
+            const closeModal = document.querySelector('.close');
+            const cancelCropBtn = document.getElementById('cancel-crop');
+            const saveCropBtn = document.getElementById('save-crop');
+            const imageToCrop = document.getElementById('imageToCrop');
+            let cropper;
+
+            // Profile picture upload functionality
+            const uploadBtn = document.getElementById('upload-btn');
+            const removeBtn = document.getElementById('remove-btn');
+            const fileInput = document.getElementById('file-input');
+            const avatarImage = document.getElementById('avatar-image');
+            const avatarPlaceholder = document.getElementById('avatar-placeholder');
+            const profileAvatarImage = document.getElementById('profile-avatar-image');
+            const profileAvatarPlaceholder = document.getElementById('profile-avatar-placeholder');
+
+            uploadBtn.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(event) {
+                        // Show the modal with the image to crop
+                        imageToCrop.src = event.target.result;
+                        cropModal.style.display = 'block';
+                        
+                        // Initialize cropper
+                        if (cropper) {
+                            cropper.destroy();
+                        }
+                        
+                        cropper = new Cropper(imageToCrop, {
+                            aspectRatio: 1,
+                            viewMode: 1,
+                            autoCropArea: 0.8,
+                            responsive: true,
+                            guides: false
+                        });
+                    };
+                    
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+
+            // Close modal when clicking X
+            closeModal.addEventListener('click', function() {
+                cropModal.style.display = 'none';
+                if (cropper) {
+                    cropper.destroy();
+                }
+            });
+
+            // Close modal when clicking cancel
+            cancelCropBtn.addEventListener('click', function() {
+                cropModal.style.display = 'none';
+                if (cropper) {
+                    cropper.destroy();
+                }
+            });
+
+            // Save cropped image
+            saveCropBtn.addEventListener('click', function() {
+                if (cropper) {
+                    // Get the cropped canvas
+                    const canvas = cropper.getCroppedCanvas({
+                        width: 300,
+                        height: 300,
+                        minWidth: 256,
+                        minHeight: 256,
+                        maxWidth: 1024,
+                        maxHeight: 1024,
+                        fillColor: '#fff',
+                        imageSmoothingEnabled: true,
+                        imageSmoothingQuality: 'high',
+                    });
+
+                    // Convert canvas to data URL
+                    const croppedImageUrl = canvas.toDataURL('image/jpeg', 0.9);
+                    
+                    // Set the cropped image as profile picture
+                    avatarImage.src = croppedImageUrl;
+                    avatarImage.style.display = 'block';
+                    avatarPlaceholder.style.display = 'none';
+                    
+                    // Also update the profile page avatar
+                    profileAvatarImage.src = croppedImageUrl;
+                    profileAvatarImage.style.display = 'block';
+                    profileAvatarPlaceholder.style.display = 'none';
+                    
+                    // Save to localStorage
+                    localStorage.setItem('profileImage', croppedImageUrl);
+                    
+                    // Close the modal and clean up
+                    cropModal.style.display = 'none';
+                    cropper.destroy();
+                    
+                    // Send the cropped image to server (simulated here)
+                    sendProfileImageToServer(croppedImageUrl);
+                }
+            });
+
+            // Function to simulate sending image to server
+            function sendProfileImageToServer(imageData) {
+                // In a real application, you would send this to your backend
+                console.log('Profile image would be sent to server here');
+                // Example: fetch('/api/upload-profile-image', { method: 'POST', body: imageData });
+            }
+
+            removeBtn.addEventListener('click', function() {
+                avatarImage.src = '';
+                avatarImage.style.display = 'none';
+                avatarPlaceholder.style.display = 'flex';
+                
+                // Also update the profile page avatar
+                profileAvatarImage.src = '';
+                profileAvatarImage.style.display = 'none';
+                profileAvatarPlaceholder.style.display = 'flex';
+                
+                // Remove from localStorage
+                localStorage.removeItem('profileImage');
+                
+                // Notify server about removal (simulated)
+                console.log('Profile image removal would be sent to server here');
+            });
+
+            // Load saved profile image if exists
+            const savedImage = localStorage.getItem('profileImage');
+            if (savedImage) {
+                avatarImage.src = savedImage;
+                avatarImage.style.display = 'block';
+                avatarPlaceholder.style.display = 'none';
+                
+                profileAvatarImage.src = savedImage;
+                profileAvatarImage.style.display = 'block';
+                profileAvatarPlaceholder.style.display = 'none';
+            }
+
+            // Submit button functionality
+            const submitBtn = document.getElementById('submit-btn');
+            const displayName = document.getElementById('display-name');
+            const emailAddress = document.getElementById('email-address');
+            const settingsContainer = document.getElementById('settings-container');
+            const profileContainer = document.getElementById('profile-container');
+            const profileName = document.getElementById('profile-name');
+            const profileEmail = document.getElementById('profile-email');
+
+            submitBtn.addEventListener('click', function() {
+                // Save display name and email
+                localStorage.setItem('displayName', displayName.value);
+                localStorage.setItem('emailAddress', emailAddress.value);
+                
+                // Update profile page
+                profileName.textContent = displayName.value;
+                profileEmail.textContent = emailAddress.value;
+                
+                // Send account details to email (simulated)
+                sendAccountDetailsToEmail(displayName.value, emailAddress.value);
+                
+                // Show success message
+                alert('Your changes have been saved successfully!');
+                
+                // Show profile page (optional)
+                settingsContainer.style.display = 'none';
+                profileContainer.style.display = 'block';
+            });
+
+            // Function to simulate sending account details to email
+            function sendAccountDetailsToEmail(name, email) {
+                // In a real application, you would send this to your backend
+                console.log(`Account details would be sent to ${email} for user ${name}`);
+                // Example: fetch('/api/send-account-details', { 
+                //     method: 'POST', 
+                //     body: JSON.stringify({ name, email }) 
+                // });
+            }
+
+            // Load saved display name and email
+            const savedName = localStorage.getItem('displayName');
+            const savedEmail = localStorage.getItem('emailAddress');
+            if (savedName) displayName.value = savedName;
+            if (savedEmail) emailAddress.value = savedEmail;
+            
+            // Update profile page with saved values
+            if (savedName) profileName.textContent = savedName;
+            if (savedEmail) profileEmail.textContent = savedEmail;
+
+            // Two-factor authentication button
+            const twoFactorBtn = document.getElementById('two-factor-btn');
+            twoFactorBtn.addEventListener('click', function() {
+                const email = document.getElementById('email-address').value || 'your email';
+                alert(`Two-factor authentication OTP has been sent to ${email}. Please check your inbox.`);
+                
+                // In a real application, you would send the OTP to the user's email
+                console.log(`OTP would be sent to ${email} for two-factor authentication`);
+            });
+
+            // Export button
+            const exportBtn = document.getElementById('export-btn');
+            exportBtn.addEventListener('click', function() {
+                const email = document.getElementById('email-address').value || 'your email';
+                alert(`Your data export has been started. You will receive an email with download instructions at ${email}.`);
+            });
+
+            // Delete account button
+            const deleteBtn = document.getElementById('delete-btn');
+            deleteBtn.addEventListener('click', function() {
+                const email = document.getElementById('email-address').value || 'your email';
+                if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                    alert(`Account deletion request received. A confirmation email has been sent to ${email}.`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

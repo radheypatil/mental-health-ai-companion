@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Community | Mental Health AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
+    <style>
+        /* Base Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding-top: 80px;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background: linear-gradient(135deg, #6a5acd, #483d8b);
+            padding: 15px 3%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            position: fixed;
+            width: 94%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo img {
+            height: 35px;
+            margin-right: 8px;
+        }
+
+        .logo span {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(to right, #ffffff, #ffcc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 5px 0;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+            flex-shrink: 0;
+            padding: 5px 8px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a:hover {
+            color: #ffcc00;
+            transform: translateY(-2px);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #ffcc00;
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            height: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar {
+            position: fixed;
+            right: 3%;
+            top: 70px;
+            width: 300px;
+            display: none;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .search-bar.active {
+            display: block;
+        }
+
+        .search-input-container {
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 2px solid #e0e0e0;
+            border-radius: 30px;
+            font-family: 'Poppins', sans-serif;
+            outline: none;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .search-bar input:focus {
+            border-color: #6a5acd;
+            box-shadow: 0 0 10px rgba(106, 90, 205, 0.3);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6a5acd;
+        }
+
+        .search-results {
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .search-result-item {
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .search-result-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .search-result-item i {
+            margin-right: 10px;
+            color: #6a5acd;
+        }
+
+        .search-result-item .result-text {
+            flex: 1;
+        }
+
+        .search-result-item .result-category {
+            font-size: 0.8rem;
+            color: #888;
+            margin-left: 10px;
+        }
+
+        .no-results {
+            padding: 10px;
+            color: #666;
+            text-align: center;
+        }
+
+        .search-result-item.highlighted {
+            background-color: #e6e6fa;
+        }
+
+        /* Loading States */
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        .loading-skeleton {
+            animation: pulse 1.5s infinite;
+            background: #eee;
+            border-radius: 4px;
+            color: transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading-skeleton::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Community Hero */
+        .community-hero {
+            background: linear-gradient(135deg, rgba(106, 90, 205, 0.9), rgba(72, 61, 139, 0.9)),
+                        url('https://images.unsplash.com/photo-1571260898933-d1a1f6755dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            color: white;
+            padding: 60px 5%;
+            text-align: center;
+        }
+        
+        .community-hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+        }
+        
+        .community-hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        /* Main Container */
+        .community-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        /* Support Groups */
+        .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        
+        .group-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .group-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(106, 90, 205, 0.15);
+        }
+        
+        .group-banner {
+            height: 120px;
+            background: linear-gradient(45deg, #6a5acd, #8e7dff);
+            position: relative;
+        }
+        
+        .group-icon {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            bottom: -40px;
+            left: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            font-size: 30px;
+            color: #6a5acd;
+        }
+        
+        .group-content {
+            padding: 60px 30px 30px;
+        }
+        
+        .group-title {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: #483d8b;
+        }
+        
+        .group-members {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .group-members i {
+            margin-right: 5px;
+        }
+        
+        .group-description {
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .group-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .tag {
+            background: #f0f0ff;
+            color: #6a5acd;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .join-btn {
+            background: linear-gradient(45deg, #6a5acd, #8e7dff);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 44px;
+            min-width: 120px;
+            justify-content: center;
+        }
+        
+        .join-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 90, 205, 0.3);
+        }
+        
+        /* Discussion Feed */
+        .discussion-feed {
+            margin-top: 60px;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .feed-header h2 {
+            color: #483d8b;
+        }
+        
+        .new-post-btn {
+            background: linear-gradient(45deg, #ff9800, #ff6600);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            min-height: 44px;
+        }
+        
+        .new-post-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+        }
+        
+        .post {
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .post:last-child {
+            border-bottom: none;
+        }
+        
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .post-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #f0f0ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6a5acd;
+            font-size: 20px;
+            margin-right: 15px;
+        }
+        
+        .post-user {
+            font-weight: 600;
+            color: #483d8b;
+        }
+        
+        .post-time {
+            color: #999;
+            font-size: 0.8rem;
+            margin-top: 3px;
+        }
+        
+        .post-content {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .post-actions {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .post-action {
+            color: #666;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            min-height: 44px;
+        }
+        
+        .post-action:hover {
+            color: #6a5acd;
+        }
+
+        /* Engagement Meter */
+        .post-engagement {
+            margin-top: 10px;
+        }
+        
+        .engagement-meter {
+            height: 4px;
+            background: #f0f0f0;
+            border-radius: 2px;
+            margin: 5px 0;
+        }
+        
+        .engagement-fill {
+            height: 100%;
+            border-radius: 2px;
+            background: linear-gradient(90deg, #6a5acd, #8e7dff);
+        }
+        
+        /* Safety Guidelines */
+        .safety-guidelines {
+            margin-top: 60px;
+            background: #f9f9ff;
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid #e6e6fa;
+        }
+        
+        .safety-guidelines h2 {
+            color: #483d8b;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .guidelines-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .guideline-item {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .guideline-icon {
+            color: #6a5acd;
+            font-size: 1.2rem;
+            margin-top: 3px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .community-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .groups-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .feed-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .search-bar {
+                width: 250px;
+                right: 10px;
+            }
+
+            .group-content {
+                padding: 50px 20px 20px;
+            }
+
+            .post-actions {
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .search-bar {
+                width: 200px;
+                right: 10px;
+            }
+
+            .group-card {
+                border-radius: 10px;
+            }
+
+            .community-hero {
+                padding: 40px 5%;
+            }
+
+            .community-hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .community-hero p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo">
+            <img src="https://img.icons8.com/ios/100/000000/melting-ice-cream.png" alt="Mental Health AI Logo">
+            <span>Mental Health AI</span>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}"><i class="fa-solid fa-house" aria-hidden="true" style="margin-right: 5px;"></i></i>Home</a>
+            <a href="{{ url_for('notification') }}"><i class="fa-solid fa-bell" aria-hidden="true" style="margin-right: 5px;"></i></i>Notification</a>
+            <div class="search-container">
+                <a href="#" id="search-toggle" aria-label="Open search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> <span>Search</span></a>
+                <div class="search-bar" id="search-bar">
+                    <div class="search-input-container">
+                        <i class="fas fa-search search-icon" aria-hidden="true"></i>
+                        <input type="text" id="search-input" placeholder="Search features, articles..." aria-label="Search community content">
+                    </div>
+                    <div class="search-results" id="search-results">
+                        <!-- Results will be inserted here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            <a href="{{ url_for('setting') }}"><i class="fa-solid fa-gear" aria-hidden="true"></i> <span>Settings</span></a>
+        </div>
+    </nav>
+
+    <!-- Community Hero -->
+    <section class="community-hero">
+        <h1>You're Not Alone</h1>
+        <p>Connect with others who understand. Share experiences, find support, and grow together in a safe space.</p>
+        <button class="new-post-btn" aria-label="Create new post">
+            <i class="fas fa-plus" aria-hidden="true"></i> New Post
+        </button>
+    </section>
+
+    <!-- Main Content -->
+    <div class="community-container">
+        <!-- Support Groups -->
+        <h2>Support Groups</h2>
+        <p>Join a community that matches your needs</p>
+        
+        <div class="groups-grid">
+            <!-- Group 1 -->
+            <div class="group-card">
+                <div class="group-banner"></div>
+                <div class="group-icon">
+                    <i class="fas fa-hands-helping" aria-hidden="true"></i>
+                </div>
+                <div class="group-content">
+                    <h3 class="group-title">Anxiety Support Circle</h3>
+                    <div class="group-members">
+                        <i class="fas fa-users" aria-hidden="true"></i> 1,240 members
+                    </div>
+                    <p class="group-description">
+                        A safe space to share coping strategies and daily challenges with others who understand anxiety.
+                    </p>
+                    <div class="group-tags">
+                        <span class="tag">Anxiety</span>
+                        <span class="tag">Coping</span>
+                        <span class="tag">Daily Support</span>
+                    </div>
+                    <button class="join-btn" aria-label="Join Anxiety Support Circle group">
+                        <i class="fas fa-door-open" aria-hidden="true"></i> Join Group
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Group 2 -->
+            <div class="group-card">
+                <div class="group-banner" style="background: linear-gradient(45deg, #ff9800, #ff6600);"></div>
+                <div class="group-icon" style="color: #ff9800;">
+                    <i class="fas fa-heart" aria-hidden="true"></i>
+                </div>
+                <div class="group-content">
+                    <h3 class="group-title">Self-Care Warriors</h3>
+                    <div class="group-members">
+                        <i class="fas fa-users" aria-hidden="true"></i> 890 members
+                    </div>
+                    <p class="group-description">
+                        Celebrate small wins and share self-care practices that help you through tough days.
+                    </p>
+                    <div class="group-tags">
+                        <span class="tag" style="background: #fff0e6; color: #ff6600;">Self-Care</span>
+                        <span class="tag" style="background: #fff0e6; color: #ff6600;">Positivity</span>
+                    </div>
+                    <button class="join-btn" style="background: linear-gradient(45deg, #ff9800, #ff6600);" aria-label="Join Self-Care Warriors group">
+                        <i class="fas fa-door-open" aria-hidden="true"></i> Join Group
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Group 3 -->
+            <div class="group-card">
+                <div class="group-banner" style="background: linear-gradient(45deg, #66b3ff, #3385ff);"></div>
+                <div class="group-icon" style="color: #66b3ff;">
+                    <i class="fas fa-moon" aria-hidden="true"></i>
+                </div>
+                <div class="group-content">
+                    <h3 class="group-title">Sleep & Relaxation</h3>
+                    <div class="group-members">
+                        <i class="fas fa-users" aria-hidden="true"></i> 720 members
+                    </div>
+                    <p class="group-description">
+                        Share tips and experiences about improving sleep quality and relaxation techniques.
+                    </p>
+                    <div class="group-tags">
+                        <span class="tag" style="background: #e6f2ff; color: #3385ff;">Insomnia</span>
+                        <span class="tag" style="background: #e6f2ff; color: #3385ff;">Meditation</span>
+                    </div>
+                    <button class="join-btn" style="background: linear-gradient(45deg, #66b3ff, #3385ff);" aria-label="Join Sleep & Relaxation group">
+                        <i class="fas fa-door-open" aria-hidden="true"></i> Join Group
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Discussion Feed -->
+        <div class="discussion-feed">
+            <div class="feed-header">
+                <h2><i class="fas fa-comments" aria-hidden="true"></i> Recent Discussions</h2>
+                <button class="new-post-btn" aria-label="Create new post">
+                    <i class="fas fa-plus" aria-hidden="true"></i> New Post
+                </button>
+            </div>
+            
+            <!-- Post 1 -->
+            <div class="post" lang="en">
+                <div class="post-header">
+                    <div class="post-avatar">
+                        <i class="fas fa-user" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="post-user">Alex M.</div>
+                        <div class="post-time">2 hours ago · In Anxiety Support</div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <p>Does anyone else feel overwhelmed by small decisions? Today I spent 20 minutes deciding what to eat for lunch and then just didn't eat. How do you cope with decision fatigue?</p>
+                </div>
+                <div class="post-engagement">
+                    <div class="engagement-meter">
+                        <div class="engagement-fill" style="width: 75%;"></div>
+                    </div>
+                    <small>High engagement post</small>
+                </div>
+                <div class="post-actions">
+                    <div class="post-action" aria-label="Like post">
+                        <i class="far fa-heart" aria-hidden="true"></i> 24
+                    </div>
+                    <div class="post-action" aria-label="View comments">
+                        <i class="far fa-comment" aria-hidden="true"></i> 8 comments
+                    </div>
+                    <div class="post-action" aria-label="Share post">
+                        <i class="fas fa-share" aria-hidden="true"></i> Share
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Post 2 -->
+            <div class="post" lang="en">
+                <div class="post-header">
+                    <div class="post-avatar" style="background: #fff0e6; color: #ff9800;">
+                        <i class="fas fa-user-tie" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <div class="post-user">Jamie R.</div>
+                        <div class="post-time">5 hours ago · In Self-Care Warriors</div>
+                    </div>
+                </div>
+                <div class="post-content">
+                    <p>My small win today: I took a 10-minute walk outside even though I didn't feel like it. The sunshine actually helped my mood more than I expected. What's your small win today?</p>
+                </div>
+                <div class="post-engagement">
+                    <div class="engagement-meter">
+                        <div class="engagement-fill" style="width: 90%;"></div>
+                    </div>
+                    <small>Very high engagement post</small>
+                </div>
+                <div class="post-actions">
+                    <div class="post-action" aria-label="Like post">
+                        <i class="far fa-heart" aria-hidden="true"></i> 42
+                    </div>
+                    <div class="post-action" aria-label="View comments">
+                        <i class="far fa-comment" aria-hidden="true"></i> 15 comments
+                    </div>
+                    <div class="post-action" aria-label="Share post">
+                        <i class="fas fa-share" aria-hidden="true"></i> Share
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Safety Guidelines -->
+        <div class="safety-guidelines">
+            <h2><i class="fas fa-shield-alt" aria-hidden="true"></i> Community Guidelines</h2>
+            <div class="guidelines-list">
+                <div class="guideline-item">
+                    <div class="guideline-icon">
+                        <i class="fas fa-heart" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <h3>Be Kind</h3>
+                        <p>This is a support space - offer compassion and withhold judgment.</p>
+                    </div>
+                </div>
+                <div class="guideline-item">
+                    <div class="guideline-icon">
+                        <i class="fas fa-lock" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <h3>Respect Privacy</h3>
+                        <p>What's shared here stays here. Don't screenshot or repost.</p>
+                    </div>
+                </div>
+                <div class="guideline-item">
+                    <div class="guideline-icon">
+                        <i class="fas fa-hand-paper" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <h3>No Unsolicited Advice</h3>
+                        <p>Share your experience ("what worked for me") rather than directives.</p>
+                    </div>
+                </div>
+                <div class="guideline-item">
+                    <div class="guideline-icon">
+                        <i class="fas fa-flag" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <h3>Report Concerns</h3>
+                        <p>Help us maintain safety by flagging inappropriate content.</p>
+                    </div>
+                </div>
+                <div class="guideline-item">
+                    <div class="guideline-icon">
+                        <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+                    </div>
+                    <div>
+                        <h3>Crisis Resources</h3>
+                        <p>If you're in crisis, please contact <a href="#" style="color: #6a5acd;">these emergency resources</a> immediately.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced Search Functionality with Debounce
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchToggle = document.getElementById('search-toggle');
+            const searchBar = document.getElementById('search-bar');
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('search-results');
+            
+            // Sample search data
+            const searchData = [
+                { 
+                    title: "Anxiety Support Circle", 
+                    category: "Support Group", 
+                    icon: "hands-helping", 
+                    link: "#",
+                    tags: ["anxiety", "support", "mental health"]
+                },
+                { 
+                    title: "Self-Care Warriors", 
+                    category: "Support Group", 
+                    icon: "heart", 
+                    link: "#",
+                    tags: ["self-care", "positivity", "wellbeing"]
+                },
+                { 
+                    title: "Sleep & Relaxation", 
+                    category: "Support Group", 
+                    icon: "moon", 
+                    link: "#",
+                    tags: ["sleep", "insomnia", "relaxation"]
+                },
+                { 
+                    title: "Community Guidelines", 
+                    category: "Information", 
+                    icon: "shield-alt", 
+                    link: "#safety-guidelines",
+                    tags: ["rules", "safety", "guidelines"]
+                },
+                { 
+                    title: "Create New Post", 
+                    category: "Feature", 
+                    icon: "plus", 
+                    link: "#",
+                    tags: ["post", "create", "share"]
+                },
+                { 
+                    title: "Decision Fatigue Discussion", 
+                    category: "Post", 
+                    icon: "comments", 
+                    link: "#",
+                    tags: ["anxiety", "decisions", "stress"]
+                },
+                { 
+                    title: "Small Wins Discussion", 
+                    category: "Post", 
+                    icon: "comments", 
+                    link: "#",
+                    tags: ["positivity", "achievement", "self-care"]
+                }
+            ];
+
+            // Toggle search bar
+            searchToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                searchBar.classList.toggle('active');
+                if (searchBar.classList.contains('active')) {
+                    searchInput.focus();
+                }
+            });
+
+            // Close search when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchBar.contains(e.target) && e.target !== searchToggle && !searchToggle.contains(e.target)) {
+                    searchBar.classList.remove('active');
+                }
+            });
+
+            // Debounce search function
+            function debounce(func, wait) {
+                let timeout;
+                return function() {
+                    const context = this, args = arguments;
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(context, args), wait);
+                };
+            }
+
+            // Search functionality
+            searchInput.addEventListener('input', debounce(function() {
+                const query = this.value.trim().toLowerCase();
+                
+                if (query === '') {
+                    searchResults.innerHTML = '';
+                    return;
+                }
+                
+                // Show loading state
+                searchResults.innerHTML = '<div class="search-result-item loading-skeleton" style="height:40px;"></div>'.repeat(3);
+                
+                // Simulate API delay
+                setTimeout(() => {
+                    const results = searchData.filter(item => 
+                        item.title.toLowerCase().includes(query) || 
+                        item.category.toLowerCase().includes(query) ||
+                        (item.tags && item.tags.some(tag => tag.includes(query)))
+                    );
+                    
+                    displayResults(results);
+                }, 500);
+            }, 300));
+
+            // Keyboard navigation
+            let highlightedIndex = -1;
+            
+            searchInput.addEventListener('keydown', function(e) {
+                const results = document.querySelectorAll('.search-result-item');
+                
+                if (e.key === 'ArrowDown' && results.length > 0) {
+                    e.preventDefault();
+                    highlightedIndex = (highlightedIndex + 1) % results.length;
+                    updateHighlightedItem(results);
+                } else if (e.key === 'ArrowUp' && results.length > 0) {
+                    e.preventDefault();
+                    highlightedIndex = (highlightedIndex - 1 + results.length) % results.length;
+                    updateHighlightedItem(results);
+                } else if (e.key === 'Enter' && highlightedIndex >= 0) {
+                    e.preventDefault();
+                    results[highlightedIndex].click();
+                } else if (e.key === 'Escape') {
+                    searchBar.classList.remove('active');
+                }
+            });
+
+            function updateHighlightedItem(results) {
+                results.forEach((item, index) => {
+                    if (index === highlightedIndex) {
+                        item.classList.add('highlighted');
+                        item.scrollIntoView({ block: 'nearest' });
+                    } else {
+                        item.classList.remove('highlighted');
+                    }
+                });
+            }
+
+            function displayResults(results) {
+                if (results.length === 0) {
+                    searchResults.innerHTML = '<div class="no-results">No results found</div>';
+                    return;
+                }
+
+                searchResults.innerHTML = results.map(item => `
+                    <a href="${item.link}" class="search-result-item" aria-label="${item.title} - ${item.category}">
+                        <i class="fas fa-${item.icon}" aria-hidden="true"></i>
+                        <div class="result-text">${item.title}</div>
+                        <div class="result-category">${item.category}</div>
+                    </a>
+                `).join('');
+
+                // Reset highlighted index when new results are displayed
+                highlightedIndex = -1;
+            }
+
+            // Close search when a result is clicked
+            searchResults.addEventListener('click', function(e) {
+                if (e.target.closest('.search-result-item')) {
+                    searchBar.classList.remove('active');
+                    searchInput.value = '';
+                    searchResults.innerHTML = '';
+                }
+            });
+
+            // Join Group Buttons
+            document.querySelectorAll('.join-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const groupTitle = this.closest('.group-card').querySelector('.group-title').textContent;
+                    this.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i> Joined';
+                    this.style.background = '#8fd694';
+                    setTimeout(() => {
+                        alert(`You've joined ${groupTitle}! We'll notify you when there are new discussions.`);
+                    }, 300);
+                });
+            });
+            
+            // New Post Button
+            document.querySelectorAll('.new-post-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Create modal
+                    const modal = document.createElement('div');
+                    modal.style.position = 'fixed';
+                    modal.style.top = '0';
+                    modal.style.left = '0';
+                    modal.style.width = '100%';
+                    modal.style.height = '100%';
+                    modal.style.background = 'rgba(0,0,0,0.5)';
+                    modal.style.display = 'flex';
+                    modal.style.justifyContent = 'center';
+                    modal.style.alignItems = 'center';
+                    modal.style.zIndex = '1000';
+                    
+                    modal.innerHTML = `
+                        <div style="background:white; padding:30px; border-radius:15px; width:90%; max-width:600px;" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+                            <h2 id="modal-title" style="color:#483d8b; margin-top:0;">Create New Post</h2>
+                            <textarea placeholder="What would you like to share?" style="width:100%; height:150px; padding:15px; border:2px solid #e0e0e0; border-radius:10px; font-family:'Poppins', sans-serif; margin-bottom:15px;" aria-label="Post content"></textarea>
+                            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                                <button style="padding:10px 20px; background:#f0f0f0; border:none; border-radius:30px; cursor:pointer;" aria-label="Cancel post creation">Cancel</button>
+                                <button style="padding:10px 20px; background:#6a5acd; color:white; border:none; border-radius:30px; cursor:pointer;" aria-label="Submit post">Post</button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(modal);
+                    
+                    // Close modal when clicking outside or cancel button
+                    modal.addEventListener('click', function(e) {
+                        if (e.target === this || e.target.textContent === 'Cancel') {
+                            document.body.removeChild(modal);
+                        }
+                    });
+                    
+                    // Close on Escape key
+                    document.addEventListener('keydown', function handleEsc(e) {
+                        if (e.key === 'Escape') {
+                            document.body.removeChild(modal);
+                            document.removeEventListener('keydown', handleEsc);
+                        }
+                    });
+                });
+            });
+            
+            // Post interaction
+            document.querySelectorAll('.post-action').forEach(action => {
+                action.addEventListener('click', function() {
+                    const icon = this.querySelector('i');
+                    
+                    if (icon.classList.contains('fa-heart')) {
+                        icon.classList.toggle('fas');
+                        icon.classList.toggle('far');
+                        if (icon.classList.contains('fas')) {
+                            this.innerHTML = '<i class="fas fa-heart" style="color:#ff6b6b;" aria-hidden="true"></i> ' + 
+                                (parseInt(this.textContent.trim()) + 1);
+                        } else {
+                            this.innerHTML = '<i class="far fa-heart" aria-hidden="true"></i> ' + 
+                                (parseInt(this.textContent.trim()) - 1);
+                        }
+                    }
+                });
+            });
+
+            // Simulate real-time new post (demo only)
+            function simulateNewPost() {
+                const postsContainer = document.querySelector('.discussion-feed');
+                const newPost = document.createElement('div');
+                newPost.className = 'post';
+                newPost.lang = 'en';
+                newPost.innerHTML = `
+                    <div class="post-header">
+                        <div class="post-avatar" style="background: #e6ffe6; color: #4CAF50;">
+                            <i class="fas fa-user-astronaut" aria-hidden="true"></i>
+                        </div>
+                        <div>
+                            <div class="post-user">New User</div>
+                            <div class="post-time">Just now · In General Support</div>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        <p>Hello everyone! Just joined and already feeling welcomed. Looking forward to connecting with you all.</p>
+                    </div>
+                    <div class="post-engagement">
+                        <div class="engagement-meter">
+                            <div class="engagement-fill" style="width: 30%;"></div>
+                        </div>
+                        <small>New post</small>
+                    </div>
+                    <div class="post-actions">
+                        <div class="post-action" aria-label="Like post">
+                            <i class="far fa-heart" aria-hidden="true"></i> 0
+                        </div>
+                        <div class="post-action" aria-label="View comments">
+                            <i class="far fa-comment" aria-hidden="true"></i> 0 comments
+                        </div>
+                        <div class="post-action" aria-label="Share post">
+                            <i class="fas fa-share" aria-hidden="true"></i> Share
+                        </div>
+                    </div>
+                `;
+                postsContainer.insertBefore(newPost, postsContainer.firstChild);
+                
+                // Add animation
+                newPost.style.animation = 'fadeIn 0.5s ease';
+            }
+
+            // Simulate a new post every 30 seconds (demo purposes)
+            setInterval(simulateNewPost, 30000);
+        });
+    </script>
+</body>
+</html>

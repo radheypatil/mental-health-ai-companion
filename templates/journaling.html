@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journaling | Mental Health AI Companion</title>
+    <meta name="description" content="Digital journal for mental health tracking with AI analysis">
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" as="style">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style">
+    <!-- Load only necessary Font Awesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navbar-height: 70px;
+            --primary-color: #6a5acd;
+            --primary-dark: #483d8b;
+            --accent-color: #ff9800;
+            --success-color: #4CAF50;
+            --text-color: #333;
+            --text-light: #666;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --border-radius: 15px;
+            --box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            --transition: all 0.3s ease;
+            --danger-color: #e63946;
+            --warning-color: #ffbe0b;
+        }
+
+        /* Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary-color);
+            color: white;
+            padding: 8px;
+            z-index: 100;
+            transition: top 0.3s;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button, [role="button"] {
+            cursor: pointer;
+        }
+
+        /* Focus styles for accessibility */
+        :focus-visible {
+            outline: 3px solid var(--primary-color);
+            outline-offset: 3px;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            padding: 15px 3%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            height: var(--navbar-height);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo img {
+            height: 35px;
+            margin-right: 8px;
+            alt: "Mental Health AI Logo";
+        }
+
+        .logo span {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(to right, #ffffff, #ffcc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 5px 0;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            transition: var(--transition);
+            position: relative;
+            white-space: nowrap;
+            flex-shrink: 0;
+            padding: 5px 8px;
+            border-radius: 4px;
+        }
+
+        .nav-links a:hover, .nav-links a:focus {
+            color: #ffcc00;
+            transform: translateY(-2px);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #ffcc00;
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after, .nav-links a:focus::after {
+            width: 100%;
+        }
+
+        /* Notification Bell Animation */
+        .fa-bell {
+            animation: bell-shake 1.5s infinite alternate;
+            transform-origin: top center;
+        }
+
+        @keyframes bell-shake {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            50% { transform: rotate(-10deg); }
+            75% { transform: rotate(5deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        /* Search Bar */
+        .search-container {
+            position: relative;
+            height: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar {
+            position: fixed;
+            right: 3%;
+            top: var(--navbar-height);
+            width: 300px;
+            display: none;
+            background: white;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .search-bar.active {
+            display: block;
+        }
+
+        .search-input-container {
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 2px solid #e0e0e0;
+            border-radius: 30px;
+            font-family: 'Poppins', sans-serif;
+            outline: none;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(106, 90, 205, 0.3);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+        }
+
+        .search-results {
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .search-result-item {
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .search-result-item:hover, .search-result-item:focus {
+            background-color: #f0f0f0;
+        }
+
+        .search-result-item i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        .search-result-item .result-text {
+            flex: 1;
+        }
+
+        .search-result-item .result-category {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-left: 10px;
+        }
+
+        .no-results {
+            padding: 10px;
+            color: var(--text-light);
+            text-align: center;
+        }
+
+        .search-result-item.highlighted {
+            background-color: #e6e6fa;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Journaling Page Specific Styles */
+        .journal-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 30px;
+            padding-top: calc(var(--navbar-height) + 20px);
+        }
+
+        .journal-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .journal-header h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .journal-header h1::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+            bottom: -10px;
+            left: 25%;
+            border-radius: 2px;
+        }
+
+        .journal-header p {
+            color: var(--text-color);
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .journal-content {
+            display: flex;
+            gap: 30px;
+        }
+
+        .journal-main {
+            flex: 2;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .journal-sidebar {
+            flex: 1;
+        }
+
+        /* Journal Entries */
+        .journal-entry {
+            margin-bottom: 30px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            position: relative;
+        }
+
+        .journal-date {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .journal-text {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            line-height: 1.7;
+            border-left: 4px solid var(--primary-color);
+            white-space: pre-wrap;
+        }
+
+        .entry-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .entry-tag {
+            background-color: #e6e6fa;
+            color: var(--primary-dark);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .entry-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .entry-action-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+
+        .entry-action-btn:hover, .entry-action-btn:focus {
+            background-color: #f0e6ff;
+        }
+
+        /* Sentiment Analysis */
+        .sentiment-analysis {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .sentiment-analysis h4 {
+            color: var(--success-color);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sentiment-analysis p {
+            margin-bottom: 5px;
+        }
+
+        /* Journal Form */
+        .journal-form {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--box-shadow);
+            border-top: 5px solid var(--primary-color);
+        }
+
+        .journal-form h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .journal-form h2 i {
+            margin-right: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 10px rgba(106, 90, 205, 0.1);
+        }
+
+        /* Text Formatting Toolbar */
+        .text-formatting {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .text-formatting button {
+            background: #f0f0f0;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .text-formatting button:hover {
+            background: #e0e0e0;
+        }
+
+        /* Mood Selector */
+        .mood-selector {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .mood-option {
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 10px;
+            border-radius: 8px;
+            flex: 1 0 calc(20% - 10px);
+            min-width: 60px;
+            border: 2px solid transparent;
+            background-color: #f9f9f9;
+            position: relative;
+        }
+
+        .mood-option:focus-within {
+            border-color: var(--primary-color);
+        }
+
+        .mood-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .mood-option:hover {
+            background: #f0e6ff;
+        }
+
+        .mood-option.selected {
+            background: #e6d9ff;
+        }
+
+        .mood-option i {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            display: block;
+            pointer-events: none;
+        }
+
+        .mood-option span {
+            pointer-events: none;
+            font-size: 0.9rem;
+        }
+
+        /* Tag Input */
+        .tag-input-container {
+            position: relative;
+        }
+
+        .tag-suggestions {
+            margin-top: 5px;
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .tag-suggestions button {
+            background: #f0f0f0;
+            border: none;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .tag-suggestions button:hover {
+            background: #e0e0e0;
+        }
+
+        /* Privacy Notice */
+        .privacy-notice {
+            background: #e3f2fd;
+            padding: 10px 15px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .privacy-notice i {
+            color: var(--primary-color);
+            flex-shrink: 0;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
+            color: white;
+        }
+
+        .btn-primary:hover, .btn-primary:focus {
+            background: linear-gradient(45deg, var(--primary-dark), var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 90, 205, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover, .btn-secondary:focus {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+        }
+
+        /* Sidebar Components */
+        .journal-prompt {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow);
+            border-top: 5px solid var(--accent-color);
+        }
+
+        .journal-prompt h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .journal-prompt h3 i {
+            margin-right: 10px;
+            color: var(--accent-color);
+        }
+
+        .journal-prompt p {
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+
+        /* Recent Entries */
+        .recent-entries {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .recent-entries h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .recent-entries h3 i {
+            margin-right: 10px;
+        }
+
+        .entry-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .entry-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .entry-item:last-child {
+            border-bottom: none;
+        }
+
+        .entry-item a {
+            text-decoration: none;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            transition: color 0.3s ease;
+            padding: 5px;
+            border-radius: 5px;
+        }
+
+        .entry-item a:hover, .entry-item a:focus {
+            color: var(--primary-color);
+            background-color: #f5f5f5;
+        }
+
+        .entry-item i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        /* Stats Widget */
+        .stats-widget {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: var(--box-shadow);
+            border-top: 5px solid var(--success-color);
+        }
+
+        .stats-widget h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .stats-widget h3 i {
+            margin-right: 10px;
+            color: var(--success-color);
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        /* Error Message */
+        .error-message {
+            color: #d32f2f;
+            background-color: #fde8e8;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        /* Success Message */
+        .success-message {
+            color: var(--success-color);
+            background-color: #e8f5e9;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        /* Export Options */
+        .export-options {
+            display: none;
+            margin-top: 15px;
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .export-options.active {
+            display: block;
+        }
+
+        .export-options h3 {
+            margin-bottom: 10px;
+            font-size: 1rem;
+            color: var(--text-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .journal-content {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .journal-header h1 {
+                font-size: 2rem;
+            }
+
+            .journal-main, 
+            .journal-sidebar {
+                padding: 20px;
+            }
+
+            .mood-selector {
+                gap: 5px;
+            }
+
+            .mood-option {
+                flex: 1 0 calc(33% - 5px);
+            }
+
+            .search-bar {
+                width: 90%;
+                right: 5%;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                width: 100%;
+            }
+
+            .entry-actions {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-links a span {
+                display: none;
+            }
+
+            .nav-links a i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+        }
+        
+        :root {
+            --navbar-height: 70px;
+            --primary-color: #6a5acd;
+            /* ... rest of your CSS ... */
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to Content Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Navigation Bar -->
+    <nav aria-label="Main navigation">
+        <div class="logo">
+            <img src="https://img.icons8.com/ios/100/000000/melting-ice-cream.png" alt="Mental Health AI Logo">
+            <span>Mental Health AI</span>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}"><i class="fa-solid fa-house" aria-hidden="true" style="margin-right: 5px;"></i></i>Home</a>
+            <a href="{{ url_for('notification') }}"><i class="fa-solid fa-bell"></i> <span>Notifications</span></a>
+            <div class="search-container">
+                <a href="#" id="search-toggle" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i> <span>Search</span></a>
+                <div class="search-bar" id="search-bar" role="search">
+                    <div class="search-input-container">
+                        <i class="fas fa-search search-icon" aria-hidden="true"></i>
+                        <input type="text" id="search-input" placeholder="Search features, articles..." aria-label="Search input">
+                    </div>
+                    <div class="search-results" id="search-results" aria-live="polite">
+                        <!-- Results will be inserted here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            <a href="{{ url_for('setting') }}"><i class="fa-solid fa-gear" aria-hidden="true"></i> <span>Settings</span></a>
+            {% if user %}
+                <a href="{{ url_for('logout') }}"><i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span></a>
+            {% else %}
+                <a href="{{ url_for('login') }}"><i class="fa-solid fa-right-to-bracket"></i> <span>Login</span></a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Journaling Content -->
+    <div class="journal-container">
+        <div class="journal-header">
+            <h1>Journaling</h1>
+            <p>Express your thoughts and feelings in a safe space. Your journal helps our AI understand you better and provide personalized support.</p>
+        </div>
+
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="journal-content">
+            <main class="journal-main" id="main-content">
+                <!-- Success/Error Messages -->
+                <div class="error-message" id="error-message" role="alert"></div>
+                <div class="success-message" id="success-message" role="status"></div>
+
+                <!-- Journal Entries -->
+                {% if entries %}
+                    {% for entry in entries %}
+                    <article class="journal-entry" aria-labelledby="entry-{{ entry.id }}-title">
+                        <div class="journal-date" id="entry-{{ entry.id }}-title">
+                            {{ entry.created_at.strftime('%B %d, %Y • %I:%M %p') }}
+                        </div>
+                        <h3>{{ entry.title }}</h3>
+                        <div class="journal-text">
+                            {{ entry.content }}
+                        </div>
+                        <div class="entry-actions">
+                            <button class="entry-action-btn edit-entry" data-entry-id="{{ entry.id }}" aria-label="Edit entry">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="entry-action-btn delete-entry" data-entry-id="{{ entry.id }}" aria-label="Delete entry">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </button>
+                        </div>
+                    </article>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-entries">
+                        <p>No journal entries yet. Start by writing your first entry below.</p>
+                    </div>
+                {% endif %}
+
+                <!-- Journal Form -->
+                <form class="journal-form" id="journal-form" method="POST" action="{{ url_for('journaling') }}" aria-labelledby="journal-form-title">
+                    <h2 id="journal-form-title"><i class="fas fa-plus-circle"></i> New Journal Entry</h2>
+                    
+                    <div class="form-group">
+                        <label for="entry-title">Title (optional)</label>
+                        <input type="text" id="entry-title" name="title" placeholder="How are you feeling today?" aria-label="Journal entry title">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="entry-content">Your Thoughts <span aria-hidden="true">*</span><span class="sr-only">required</span></label>
+                        <div class="text-formatting">
+                            <button type="button" aria-label="Bold"><i class="fas fa-bold"></i></button>
+                            <button type="button" aria-label="Italic"><i class="fas fa-italic"></i></button>
+                            <button type="button" aria-label="Bullet List"><i class="fas fa-list-ul"></i></button>
+                        </div>
+                        <textarea id="entry-content" name="content" placeholder="Write freely about your day, your feelings, or anything on your mind..." aria-label="Journal entry content" required></textarea>
+                    </div>
+                    
+                    <div class="entry-actions">
+                        <button type="button" class="btn btn-secondary" id="save-draft">Save Draft</button>
+                        <button type="submit" class="btn btn-primary">Publish Entry</button>
+                    </div>
+
+                    <div class="privacy-notice">
+                        <i class="fas fa-lock"></i>
+                        <p>Your journal entries are encrypted and private. Only you can access them.</p>
+                    </div>
+                </form>
+            </main>
+
+            <aside class="journal-sidebar">
+                <!-- Daily Prompt -->
+                <section class="journal-prompt" aria-labelledby="prompt-title">
+                    <h3 id="prompt-title"><i class="fas fa-lightbulb"></i> Today's Journal Prompt</h3>
+                    <p>What's one small thing that brought you joy today? Describe it in detail and how it made you feel.</p>
+                    <button class="btn btn-primary" style="width: 100%;" id="use-prompt">Use This Prompt</button>
+                </section>
+
+                <!-- Recent Entries -->
+                <section class="recent-entries" aria-labelledby="recent-entries-title">
+                    <h3 id="recent-entries-title"><i class="fas fa-history"></i> Recent Entries</h3>
+                    <ul class="entry-list">
+                        {% if entries %}
+                            {% for entry in entries[:5] %}
+                            <li class="entry-item">
+                                <a href="#entry-{{ entry.id }}">
+                                    <i class="fas fa-calendar-day" aria-hidden="true"></i>
+                                    <span>{{ entry.created_at.strftime('%B %d, %Y') }}</span>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="entry-item">
+                                <span>No recent entries</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </section>
+
+                <!-- Stats Widget -->
+                <section class="stats-widget" aria-labelledby="stats-title">
+                    <h3 id="stats-title"><i class="fas fa-chart-line"></i> Journal Stats</h3>
+                    <div class="stat-item">
+                        <span class="stat-label">Total Entries:</span>
+                        <span class="stat-value">{{ entries|length if entries else 0 }}</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">This Month:</span>
+                        <span class="stat-value">
+                            {% if entries %}
+                                {{ entries|selectattr('created_at', 'month_equal', datetime.now().month)|list|length }}
+                            {% else %}
+                                0
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Last Entry:</span>
+                        <span class="stat-value">
+                            {% if entries %}
+                                {{ entries[0].created_at.strftime('%b %d') }}
+                            {% else %}
+                                Never
+                            {% endif %}
+                        </span>
+                    </div>
+                </section>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Search functionality
+            const searchToggle = document.getElementById('search-toggle');
+            const searchBar = document.getElementById('search-bar');
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('search-results');
+            
+            // Sample search data
+            const searchData = [
+                { title: "Mood Tracker", category: "Feature", icon: "heart", link: "{{ url_for('moodtracker') }}" },
+                { title: "Journaling", category: "Feature", icon: "book", link: "{{ url_for('journaling') }}" },
+                { title: "Community Support", category: "Feature", icon: "users", link: "{{ url_for('community') }}" },
+                { title: "Music Therapy", category: "Feature", icon: "music", link: "{{ url_for('musictherapy') }}" },
+                { title: "Therapeutic Games", category: "Feature", icon: "gamepad", link: "{{ url_for('games') }}" },
+                { title: "Progress Tracking", category: "Feature", icon: "chart-line", link: "{{ url_for('progress') }}" },
+                { title: "Settings", category: "Page", icon: "gear", link: "{{ url_for('setting') }}" }
+            ];
+
+            document.addEventListener('DOMContentLoaded', function() {
+            // Search functionality
+            const searchToggle = document.getElementById('search-toggle');
+            const searchBar = document.getElementById('search-bar');
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('search-results');
+            
+            // Sample search data
+            const searchData = [
+                { title: "Mood Tracker", category: "Feature", icon: "heart", link: "moodtracker.html" },
+                { title: "Journaling", category: "Feature", icon: "book", link: "journaling.html" },
+                { title: "Community Support", category: "Feature", icon: "users", link: "community.html" },
+                { title: "Music Therapy", category: "Feature", icon: "music", link: "music.html" },
+                { title: "Therapeutic Games", category: "Feature", icon: "gamepad", link: "games.html" },
+                { title: "Progress Tracking", category: "Feature", icon: "chart-line", link: "progress.html" },
+                { title: "Stress Management", category: "Article", icon: "leaf", link: "articles/stress-management" },
+                { title: "Anxiety Relief", category: "Article", icon: "cloud", link: "articles/anxiety-relief" },
+                { title: "Settings", category: "Page", icon: "gear", link: "setting.html" },
+                { title: "Profile", category: "Page", icon: "user", link: "profile.html" }
+            ];
+
+            // Toggle search bar
+            searchToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                searchBar.classList.toggle('active');
+                if (searchBar.classList.contains('active')) {
+                    searchInput.focus();
+                }
+            });
+
+            // Close search when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchBar.contains(e.target) && e.target !== searchToggle && !searchToggle.contains(e.target)) {
+                    searchBar.classList.remove('active');
+                }
+            });
+
+            // Search functionality with debounce
+            let searchTimeout;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    const query = this.value.toLowerCase().trim();
+                    if (query === '') {
+                        searchResults.innerHTML = '';
+                        return;
+                    }
+                    
+                    const results = searchData.filter(item => 
+                        item.title.toLowerCase().includes(query) || 
+                        item.category.toLowerCase().includes(query)
+                    );
+                    
+                    displayResults(results);
+                }, 300);
+            });
+
+            // Display search results
+            function displayResults(results) {
+                if (results.length === 0) {
+                    searchResults.innerHTML = '<div class="no-results">No results found</div>';
+                    return;
+                }
+
+                searchResults.innerHTML = results.map(item => `
+                    <a href="${item.link}" class="search-result-item" aria-label="${item.title} - ${item.category}">
+                        <i class="fas fa-${item.icon}" aria-hidden="true"></i>
+                        <div class="result-text">${item.title}</div>
+                        <div class="result-category">${item.category}</div>
+                    </a>
+                `).join('');
+            }
+
+            // Keyboard navigation for search
+            let highlightedIndex = -1;
+            
+            searchInput.addEventListener('keydown', function(e) {
+                const results = document.querySelectorAll('.search-result-item');
+                
+                if (e.key === 'ArrowDown' && results.length > 0) {
+                    e.preventDefault();
+                    highlightedIndex = (highlightedIndex + 1) % results.length;
+                    updateHighlightedItem(results);
+                } else if (e.key === 'ArrowUp' && results.length > 0) {
+                    e.preventDefault();
+                    highlightedIndex = (highlightedIndex - 1 + results.length) % results.length;
+                    updateHighlightedItem(results);
+                } else if (e.key === 'Enter' && highlightedIndex >= 0) {
+                    e.preventDefault();
+                    results[highlightedIndex].click();
+                } else if (e.key === 'Escape') {
+                    searchBar.classList.remove('active');
+                }
+            });
+
+            function updateHighlightedItem(results) {
+                results.forEach((item, index) => {
+                    if (index === highlightedIndex) {
+                        item.classList.add('highlighted');
+                        item.scrollIntoView({ block: 'nearest' });
+                    } else {
+                        item.classList.remove('highlighted');
+                    }
+                });
+            }
+
+            // Mood selector functionality
+            const moodOptions = document.querySelectorAll('.mood-option');
+            moodOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const radio = this.querySelector('input[type="radio"]');
+                    radio.checked = true;
+                    radio.setAttribute('aria-checked', 'true');
+                    
+                    moodOptions.forEach(opt => {
+                        opt.classList.remove('selected');
+                        opt.querySelector('input').setAttribute('aria-checked', 'false');
+                    });
+                    this.classList.add('selected');
+                    
+                    // Update hidden field
+                    document.getElementById('selected-mood').value = radio.value;
+                });
+
+                // Keyboard support
+                option.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+
+            // Journal form submission
+            const journalForm = document.getElementById('journal-form');
+            const errorMessage = document.getElementById('error-message');
+            const successMessage = document.getElementById('success-message');
+            
+            // Delete entry functionality
+            document.querySelectorAll('.delete-entry').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const entryId = this.getAttribute('data-entry-id');
+                    if (confirm('Are you sure you want to delete this journal entry?')) {
+                        fetch(`/journal/delete/${entryId}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                this.closest('.journal-entry').remove();
+                                showSuccess('Entry deleted successfully');
+                                // Reload to update stats
+                                setTimeout(() => location.reload(), 1500);
+                            } else {
+                                showError(data.message || 'Error deleting entry');
+                            }
+                        })
+                        .catch(error => {
+                            showError('Error deleting entry');
+                        });
+                    }
+                });
+            });
+
+            // Edit entry functionality
+            document.querySelectorAll('.edit-entry').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const entryId = this.getAttribute('data-entry-id');
+                    const entry = this.closest('.journal-entry');
+                    const title = entry.querySelector('h3').textContent;
+                    const content = entry.querySelector('.journal-text').textContent.trim();
+                    
+                    document.getElementById('entry-title').value = title;
+                    document.getElementById('entry-content').value = content;
+                    
+                    // Change form to update mode
+                    journalForm.setAttribute('action', `/journal/update/${entryId}`);
+                    journalForm.querySelector('button[type="submit"]').textContent = 'Update Entry';
+                    
+                    window.scrollTo({ top: document.getElementById('journal-form').offsetTop, behavior: 'smooth' });
+                });
+            });
+
+            // Use prompt button
+            document.getElementById('use-prompt').addEventListener('click', function() {
+                const promptText = document.querySelector('.journal-prompt p').textContent;
+                document.getElementById('entry-content').value = promptText;
+                document.getElementById('entry-content').focus();
+            });
+
+            // Export functionality
+            document.querySelectorAll('.entry-action-btn').forEach(btn => {
+                if (btn.textContent.includes('Export')) {
+                    btn.addEventListener('click', function() {
+                        const entryId = this.closest('.journal-entry').querySelector('.export-options').id.split('-')[2];
+                        document.getElementById(`export-options-${entryId}`).classList.toggle('active');
+                    });
+                }
+                
+                if (btn.textContent.includes('Edit')) {
+                    btn.addEventListener('click', function() {
+                        const entry = this.closest('.journal-entry');
+                        const date = entry.querySelector('.journal-date').textContent;
+                        const content = entry.querySelector('.journal-text').textContent;
+                        
+                        document.getElementById('entry-title').value = date;
+                        document.getElementById('entry-content').value = content.trim();
+                        window.scrollTo({ top: document.getElementById('journal-form').offsetTop, behavior: 'smooth' });
+                    });
+                }
+            });
+
+            // Export buttons for sample entry
+            document.getElementById('export-pdf-1').addEventListener('click', function() {
+                alert('PDF export functionality would be implemented here');
+                document.getElementById('export-options-1').classList.remove('active');
+            });
+
+            document.getElementById('export-txt-1').addEventListener('click', function() {
+                alert('Text export functionality would be implemented here');
+                document.getElementById('export-options-1').classList.remove('active');
+            });
+
+            document.getElementById('export-json-1').addEventListener('click', function() {
+                const entry = {
+                    date: "June 15, 2023",
+                    content: document.querySelector('.journal-text').textContent.trim(),
+                    mood: "mixed",
+                    tags: ["work", "anxiety", "friends"]
+                };
+                
+                const blob = new Blob([JSON.stringify(entry, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `journal-entry-${new Date().toLocaleDateString()}.json`;
+                a.click();
+                document.getElementById('export-options-1').classList.remove('active');
+            });
+
+            // Tag suggestions
+            document.querySelectorAll('.tag-suggestions button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tagInput = document.getElementById('entry-tags');
+                    if (tagInput.value) {
+                        tagInput.value += `, ${this.textContent}`;
+                    } else {
+                        tagInput.value = this.textContent;
+                    }
+                    tagInput.focus();
+                });
+            });
+
+            // Basic text formatting
+            document.querySelector('.text-formatting button:nth-child(1)').addEventListener('click', function() {
+                document.execCommand('bold', false, null);
+                document.getElementById('entry-content').focus();
+            });
+
+            document.querySelector('.text-formatting button:nth-child(2)').addEventListener('click', function() {
+                document.execCommand('italic', false, null);
+                document.getElementById('entry-content').focus();
+            });
+
+            document.querySelector('.text-formatting button:nth-child(3)').addEventListener('click', function() {
+                document.execCommand('insertUnorderedList', false, null);
+                document.getElementById('entry-content').focus();
+            });
+        });
+    </script>
+</body>
+</html>

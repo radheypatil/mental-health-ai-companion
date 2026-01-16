@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | Mental Health AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        /* Shared Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding-top: 80px;
+            line-height: 1.6;
+        }
+        
+        /* Navigation Styles */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 94%;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            z-index: 1000;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #483d8b;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #6a5acd;
+        }
+        
+        .nav-links a.active {
+            color: #6a5acd;
+            font-weight: 600;
+        }
+        
+        .nav-links a i {
+            font-size: 1.1rem;
+        }
+        
+        /* Privacy Policy Specific Styles */
+        .privacy-hero {
+            background: linear-gradient(135deg, rgba(106, 90, 205, 0.9), rgba(72, 61, 139, 0.9)),
+                        url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            color: white;
+            padding: 80px 5%;
+            text-align: center;
+            position: relative;
+        }
+        
+        .privacy-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            z-index: 1;
+        }
+        
+        .privacy-hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .privacy-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .privacy-hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .privacy-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .privacy-content {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        
+        .last-updated {
+            text-align: right;
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+        
+        h2 {
+            color: #483d8b;
+            margin-top: 40px;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+        
+        h3 {
+            color: #6a5acd;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            font-size: 1.4rem;
+        }
+        
+        p, li {
+            color: #555;
+            margin-bottom: 15px;
+        }
+        
+        ul {
+            padding-left: 20px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .highlight-box {
+            background: #f9f9ff;
+            border-left: 4px solid #6a5acd;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                padding: 15px;
+            }
+            
+            .logo {
+                margin-bottom: 15px;
+            }
+            
+            .nav-links {
+                width: 100%;
+                justify-content: space-around;
+                gap: 10px;
+            }
+            
+            .nav-links a span {
+                display: none;
+            }
+            
+            .privacy-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .privacy-content {
+                padding: 25px;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <img src="https://img.icons8.com/ios/100/000000/melting-ice-cream.png" alt="Mental Health AI Logo"> 
+            <span>Mental Health AI</span>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}"><i class="fa-solid fa-house" aria-hidden="true" style="margin-right: 5px;"></i></i>Home</a>
+        </div>
+    </nav>
+
+    <!-- Privacy Hero -->
+    <section class="privacy-hero">
+        <div class="privacy-hero-content">
+            <h1>Your Privacy Matters</h1>
+            <p>We're committed to protecting your personal information with the highest standards of security and transparency</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="privacy-container">
+        <div class="privacy-content">
+            <div class="last-updated">Last Updated: June 15, 2023</div>
+            
+            <div class="highlight-box">
+                <p><strong>Summary:</strong> Mental Health AI Companion collects minimal data necessary to provide our services. We never sell your data. All sensitive information is encrypted. You control what you share.</p>
+            </div>
+            
+            <h2>Privacy Policy</h2>
+            <p>This Privacy Policy explains how Mental Health AI Companion ("we," "us," or "our") collects, uses, discloses, and safeguards your information when you use our mental health platform and services.</p>
+            
+            <h3>1. Information We Collect</h3>
+            <p>We collect different types of information to provide and improve our services:</p>
+            
+            <h4>Personal Information</h4>
+            <ul>
+                <li><strong>Account Data:</strong> Email address, username, password (hashed)</li>
+                <li><strong>Profile Information:</strong> Age, gender (optional), timezone</li>
+                <li><strong>Mood/Journal Entries:</strong> Only what you voluntarily provide</li>
+            </ul>
+            
+            <h4>Technical Information</h4>
+            <ul>
+                <li><strong>Device Data:</strong> IP address, browser type, operating system</li>
+                <li><strong>Usage Data:</strong> Feature usage, session duration</li>
+                <li><strong>Cookies:</strong> For functionality and analytics (manage in settings)</li>
+            </ul>
+            
+            <h3>2. How We Use Your Information</h3>
+            <p>We use your information only for legitimate purposes:</p>
+            <ul>
+                <li>Provide and personalize our services</li>
+                <li>Improve mental health recommendations</li>
+                <li>Respond to your requests and questions</li>
+                <li>Analyze usage patterns to enhance features</li>
+                <li>Ensure platform security and prevent abuse</li>
+                <li>Comply with legal obligations</li>
+            </ul>
+            
+            <h3>3. Data Sharing & Disclosure</h3>
+            <p>We value your trust and limit data sharing:</p>
+            <ul>
+                <li><strong>Never Sold:</strong> We don't sell or rent your personal data</li>
+                <li><strong>Service Providers:</strong> Only to trusted partners who assist our operations (under strict confidentiality)</li>
+                <li><strong>Legal Requirements:</strong> When required by law or to protect rights</li>
+                <li><strong>With Your Consent:</strong> Only when you explicitly opt-in</li>
+            </ul>
+            
+            <div class="highlight-box">
+                <p><strong>Mental Health Data Protection:</strong> Your journal entries and mood data are encrypted end-to-end. Even our team cannot read this sensitive content unless you explicitly share it through our community features.</p>
+            </div>
+            
+            <h3>4. Data Security</h3>
+            <p>We implement robust security measures:</p>
+            <ul>
+                <li>End-to-end encryption for sensitive data</li>
+                <li>Regular security audits and penetration testing</li>
+                <li>Two-factor authentication options</li>
+                <li>Employee training on data protection</li>
+                <li>Secure server infrastructure with access controls</li>
+            </ul>
+            
+            <h3>5. Your Rights & Choices</h3>
+            <p>You have control over your data:</p>
+            <ul>
+                <li><strong>Access:</strong> Request a copy of your personal data</li>
+                <li><strong>Correction:</strong> Update inaccurate information</li>
+                <li><strong>Deletion:</strong> Request deletion of your account and data</li>
+                <li><strong>Export:</strong> Download your data in a portable format</li>
+                <li><strong>Opt-Out:</strong> From non-essential communications</li>
+                <li><strong>Restrict Processing:</strong> Limit how we use your data</li>
+            </ul>
+            
+            <h3>6. Children's Privacy</h3>
+            <p>Our services are not designed for children under 16. We do not knowingly collect personal information from children under 16. If we become aware of such collection, we will take steps to delete the information.</p>
+            
+            <h3>7. International Data Transfers</h3>
+            <p>If we transfer data outside your country, we ensure adequate protection through:</p>
+            <ul>
+                <li>Standard contractual clauses</li>
+                <li>Privacy Shield frameworks (where applicable)</li>
+                <li>Other legally-approved mechanisms</li>
+            </ul>
+            
+            <h3>8. Policy Changes</h3>
+            <p>We may update this policy periodically. We'll notify you of significant changes through:</p>
+            <ul>
+                <li>Email notifications</li>
+                <li>In-app alerts</li>
+                <li>Updated "Last Updated" date</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer style="
+        background: linear-gradient(135deg, #6a5acd, #483d8b);
+        color: white;
+        padding: 40px 5%;
+        margin-top: 60px;
+        text-align: center;
+    ">
+        <div style="
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        ">
+            <h3 style="
+                color: white;
+                margin-bottom: 20px;
+                font-size: 1.3rem;
+            ">Contact Our Privacy Team</h3>
+            <p style="color: rgba(255,255,255,0.8); margin-bottom: 15px;">
+                For privacy-related questions or to exercise your rights:
+            </p>
+            <p style="color: rgba(255,255,255,0.8); margin-bottom: 10px;">
+                <strong>Email:</strong> <a href="mailto:privacy@mentalhealthai.com" style="color: white; text-decoration: none;">privacy@mentalhealthai.com</a>
+            </p>
+            <p style="color: rgba(255,255,255,0.8);">
+                <strong>Mail:</strong> Privacy Officer, Mental Health AI, 123 Wellness Way, San Francisco, CA 94107
+            </p>
+        </div>
+        <div style="
+            text-align: center;
+            padding-top: 30px;
+            margin-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+        ">
+            <p>&copy; 2023 Mental Health AI. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Simple script to handle potential accordion functionality if sections were expanded
+        document.querySelectorAll('h3').forEach(header => {
+            header.addEventListener('click', function() {
+                // This would toggle content visibility in an expanded privacy policy
+                // Currently all content is visible by default
+            });
+        });
+    </script>
+</body>
+</html>

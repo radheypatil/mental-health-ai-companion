@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found | Mental Health AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Inherited from homepage */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1498855926480-d98e83099315?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80') no-repeat center/cover;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navigation - Same as homepage */
+        nav {
+            background: linear-gradient(135deg, #6a5acd, #483d8b);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .logo span {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(to right, #ffffff, #ffcc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Error Content */
+        .error-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 100px 20px 50px;
+        }
+
+        .error-content {
+            max-width: 600px;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .error-content h1 {
+            font-size: 8rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #ff6600, #ffcc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .error-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .error-content p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #ff9800, #ff6600);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255,152,0,0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255,152,0,0.4);
+            background: linear-gradient(45deg, #ff6600, #ff9800);
+        }
+
+        .error-icon {
+            font-size: 5rem;
+            margin-bottom: 30px;
+            color: #ff6600;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .error-content h1 {
+                font-size: 6rem;
+            }
+            
+            .error-content h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .error-content h1 {
+                font-size: 4rem;
+            }
+            
+            .error-content h2 {
+                font-size: 1.5rem;
+            }
+            
+            .btn {
+                padding: 12px 25px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <img src="https://img.icons8.com/ios/100/000000/melting-ice-cream.png" alt="Mental Health AI Logo">
+            <span>Mental Health AI</span>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}"><i class="fa-solid fa-house"></i> <span>Home</span></a>
+        </div>
+    </nav>
+
+    <!-- Error Content -->
+    <div class="error-container">
+        <div class="error-content">
+            <div class="error-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h1>404</h1>
+            <h2>Page Not Found</h2>
+            <p>The page you're looking for doesn't exist or has been moved. Let's get you back on track.</p>
+            <a href="{{ url_for('home') }}" class="btn">Return to Home</a>
+        </div>
+    </div>
+</body>
+</html>

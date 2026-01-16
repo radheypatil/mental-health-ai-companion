@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | Mental Health AI Companion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Navigation Bar - Fixed dimensions */
+        nav {
+            background: linear-gradient(135deg, #6a5acd, #483d8b);
+            padding: 15px 3%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            position: fixed;
+            width: 94%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo img {
+            height: 35px;
+            margin-right: 8px;
+        }
+
+        .logo span {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(to right, #ffffff, #ffcc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            white-space: nowrap;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 5px 0;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+            flex-shrink: 0;
+            padding: 5px 8px;
+        }
+
+        .nav-links a:hover {
+            color: #ffcc00;
+            transform: translateY(-2px);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: #ffcc00;
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Notification Bell Animation */
+        .fa-bell {
+            animation: bell-shake 1.5s infinite alternate;
+            transform-origin: top center;
+        }
+
+        @keyframes bell-shake {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            50% { transform: rotate(-10deg); }
+            75% { transform: rotate(5deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        /* Search Bar - Fixed positioning */
+        .search-container {
+            position: relative;
+            height: 40px;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar {
+            position: fixed; /* Changed from absolute to fixed */
+            right: 3%;
+            top: 70px; /* Position below the nav bar */
+            width: 300px;
+            display: none;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .search-bar.active {
+            display: block;
+        }
+
+        .search-input-container {
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 2px solid #e0e0e0;
+            border-radius: 30px;
+            font-family: 'Poppins', sans-serif;
+            outline: none;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .search-bar input:focus {
+            border-color: #6a5acd;
+            box-shadow: 0 0 10px rgba(106, 90, 205, 0.3);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6a5acd;
+        }
+
+        .search-results {
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .search-result-item {
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .search-result-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .search-result-item i {
+            margin-right: 10px;
+            color: #6a5acd;
+        }
+
+        .search-result-item .result-text {
+            flex: 1;
+        }
+
+        .search-result-item .result-category {
+            font-size: 0.8rem;
+            color: #888;
+            margin-left: 10px;
+        }
+
+        .no-results {
+            padding: 10px;
+            color: #666;
+            text-align: center;
+        }
+
+        .search-result-item.highlighted {
+            background-color: #e6e6fa;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px 10px;
+                width: calc(100% - 20px);
+            }
+            
+            .nav-links a {
+                font-size: 14px;
+                padding: 5px;
+            }
+
+            .search-bar {
+                width: 250px;
+                right: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo img {
+                height: 30px;
+            }
+
+            .logo span {
+                font-size: 16px;
+            }
+
+            .nav-links a span {
+                display: none;
+            }
+
+            .nav-links a i {
+                margin-right: 0;
+                font-size: 16px;
+            }
+
+            .search-bar {
+                width: 200px;
+                right: 10px;
+            }
+        }
+
+        /* Notification Page Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            color: #333;
+            transition: background 0.3s ease-in-out;
+            padding-top: 70px;
+        }
+
+        .notifications-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .notifications-container h2 {
+            color: #6a5acd;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .notification {
+            display: flex;
+            align-items: center;
+            background: #f1f1f1;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            text-align: left;
+            transition: 0.3s;
+        }
+
+        .notification:hover {
+            background: #e8e8ff;
+        }
+
+        .notification i {
+            font-size: 20px;
+            margin-right: 10px;
+            color: #6a5acd;
+        }
+
+        .no-notifications {
+            font-size: 18px;
+            color: #888;
+            font-weight: bold;
+        }
+
+        .no-notifications img {
+            width: 120px;
+            margin-top: 15px;
+        }
+
+        /* Dark Mode */
+        body.dark-mode {
+            background: #222;
+            color: #fff;
+        }
+
+        body.dark-mode .notifications-container {
+            background: #333;
+            color: white;
+        }
+
+        body.dark-mode .notification {
+            background: #444;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo">
+            <img src="https://img.icons8.com/ios/100/000000/melting-ice-cream.png" alt="Mental Health AI Logo">
+            <span>Mental Health AI</span>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}"><i class="fa-solid fa-house" aria-hidden="true" style="margin-right: 5px;"></i></i>Home</a>
+            <a href="#"><i class="fa-solid fa-bell"></i> <span>Notifications</span></a>
+            <div class="search-container">
+                <a href="#" id="search-toggle"><i class="fa-solid fa-magnifying-glass"></i> <span>Search</span></a>
+                <div class="search-bar" id="search-bar">
+                    <div class="search-input-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="search-input" placeholder="Search features, articles...">
+                    </div>
+                    <div class="search-results" id="search-results">
+                        <!-- Results will be inserted here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            <a href="{{ url_for('setting') }}"><i class="fa-solid fa-gear" aria-hidden="true" style="margin-right: 5px;"></i></i>Settings</a>
+        </div>
+    </nav>
+
+    <!-- Notifications Section -->
+    <div class="notifications-container">
+        <h2>Notifications</h2>
+
+        <div id="notifications">
+            <!-- Notifications will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <script>
+        // Search functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchToggle = document.getElementById('search-toggle');
+            const searchBar = document.getElementById('search-bar');
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('search-results');
+            
+            // Sample search data
+            const searchData = [
+                { title: "Mood Tracker", category: "Feature", icon: "heart", link: "moodtracker.html" },
+                { title: "Journaling", category: "Feature", icon: "book", link: "journaling.html" },
+                { title: "Community Support", category: "Feature", icon: "users", link: "community.html" },
+                { title: "Music Therapy", category: "Feature", icon: "music", link: "music.html" },
+                { title: "Therapeutic Games", category: "Feature", icon: "gamepad", link: "games.html" },
+                { title: "Progress Tracking", category: "Feature", icon: "chart-line", link: "progress.html" },
+                { title: "Stress Management", category: "Article", icon: "leaf", link: "#" },
+                { title: "Anxiety Relief", category: "Article", icon: "cloud", link: "#" },
+                { title: "Settings", category: "Page", icon: "gear", link: "#" },
+                { title: "Profile", category: "Page", icon: "user", link: "#" }
+            ];
+
+            // Toggle search bar
+            searchToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                searchBar.classList.toggle('active');
+                if (searchBar.classList.contains('active')) {
+                    searchInput.focus();
+                }
+            });
+
+            // Close search when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchBar.contains(e.target) && e.target !== searchToggle && !searchToggle.contains(e.target)) {
+                    searchBar.classList.remove('active');
+                }
+            });
+
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                const results = searchData.filter(item => 
+                    item.title.toLowerCase().includes(query) || 
+                    item.category.toLowerCase().includes(query)
+                );
+                
+                displayResults(results);
+            });
+
+            // Keyboard navigation
+            let highlightedIndex = -1;
+            
+            searchInput.addEventListener('keydown', function(e) {
+                const results = document.querySelectorAll('.search-result-item');
+                
+                if (e.key === 'ArrowDown' && results.length > 0) {
+                    e.preventDefault();
+                    highlightedIndex = (highlightedIndex + 1) % results.length;
+                    updateHighlightedItem(results);
+                } else if (e.key === 'ArrowUp' && results.length > 0) {
+                    e.preventDefault();
+                    highlightedIndex = (highlightedIndex - 1 + results.length) % results.length;
+                    updateHighlightedItem(results);
+                } else if (e.key === 'Enter' && highlightedIndex >= 0) {
+                    e.preventDefault();
+                    results[highlightedIndex].click();
+                } else if (e.key === 'Escape') {
+                    searchBar.classList.remove('active');
+                }
+            });
+
+            function updateHighlightedItem(results) {
+                results.forEach((item, index) => {
+                    if (index === highlightedIndex) {
+                        item.classList.add('highlighted');
+                        item.scrollIntoView({ block: 'nearest' });
+                    } else {
+                        item.classList.remove('highlighted');
+                    }
+                });
+            }
+
+            function displayResults(results) {
+                if (searchInput.value.trim() === '') {
+                    searchResults.innerHTML = '';
+                    highlightedIndex = -1;
+                    return;
+                }
+
+                if (results.length === 0) {
+                    searchResults.innerHTML = '<div class="no-results">No results found</div>';
+                    return;
+                }
+
+                searchResults.innerHTML = results.map(item => `
+                    <a href="${item.link}" class="search-result-item">
+                        <i class="fas fa-${item.icon}"></i>
+                        <div class="result-text">${item.title}</div>
+                        <div class="result-category">${item.category}</div>
+                    </a>
+                `).join('');
+
+                highlightedIndex = -1;
+            }
+
+            // Close search when a result is clicked
+            searchResults.addEventListener('click', function(e) {
+                if (e.target.closest('.search-result-item')) {
+                    searchBar.classList.remove('active');
+                    searchInput.value = '';
+                    searchResults.innerHTML = '';
+                }
+            });
+        });
+
+        // Notification functionality
+        const notifications = [
+            { type: "reminder", message: "🌿 Time for your daily meditation session!" },
+            { type: "journal", message: "📝 Don't forget to write in your journal today." },
+            { type: "progress", message: "📈 Your mood trends are improving! Keep it up." }
+        ];
+
+        const notificationsContainer = document.getElementById("notifications");
+
+        if (notifications.length === 0) {
+            notificationsContainer.innerHTML = `
+                <p class="no-notifications">🎉 You're all set! No new notifications.</p>
+                <img src="https://cdn-icons-png.flaticon.com/512/2838/2838912.png" alt="No Notifications">
+            `;
+        } else {
+            notifications.forEach(notification => {
+                const notificationElement = document.createElement("div");
+                notificationElement.classList.add("notification");
+
+                let icon = "fa-info-circle";
+                if (notification.type === "reminder") icon = "fa-bell";
+                if (notification.type === "journal") icon = "fa-book";
+                if (notification.type === "progress") icon = "fa-chart-line";
+
+                notificationElement.innerHTML = `
+                    <i class="fa ${icon}"></i>
+                    <p>${notification.message}</p>
+                `;
+                notificationsContainer.appendChild(notificationElement);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Mental Health AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        /* Shared Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding-top: 80px;
+        }
+        
+        /* Navigation Styles */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 94%;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            z-index: 1000;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #483d8b;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #6a5acd;
+        }
+        
+        .nav-links a.active {
+            color: #6a5acd;
+            font-weight: 600;
+        }
+        
+        .nav-links a i {
+            font-size: 1.1rem;
+        }
+        
+        /* Contact-Specific Styles */
+        .contact-hero {
+            background: linear-gradient(135deg, rgba(106, 90, 205, 0.9), rgba(72, 61, 139, 0.9)),
+                        url('https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            color: white;
+            padding: 80px 5%;
+            text-align: center;
+            position: relative;
+        }
+        
+        .contact-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            z-index: 1;
+        }
+        
+        .contact-hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .contact-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .contact-hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .contact-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        
+        /* Contact Methods */
+        .contact-method {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .contact-method:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(106, 90, 205, 0.15);
+        }
+        
+        .contact-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #f0f0ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6a5acd;
+            font-size: 1.8rem;
+            margin: 0 auto 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-method:hover .contact-icon {
+            background: #6a5acd;
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .contact-method h3 {
+            color: #483d8b;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .contact-method p {
+            color: #666;
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .contact-link {
+            display: block;
+            text-align: center;
+            color: #6a5acd;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-link:hover {
+            color: #483d8b;
+            text-decoration: underline;
+        }
+        
+        /* Contact Form */
+        .contact-form-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            grid-column: 1 / -1;
+        }
+        
+        .contact-form-container h2 {
+            color: #483d8b;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #483d8b;
+            font-weight: 500;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            border-color: #6a5acd;
+            box-shadow: 0 0 10px rgba(106, 90, 205, 0.2);
+            outline: none;
+        }
+        
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(45deg, #6a5acd, #8e7dff);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 30px auto 0;
+            min-width: 200px;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(106, 90, 205, 0.3);
+        }
+        
+        /* Emergency Notice */
+        .emergency-notice {
+            background: #fff0f0;
+            border-left: 5px solid #ff6b6b;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 40px;
+            grid-column: 1 / -1;
+        }
+        
+        .emergency-notice h3 {
+            color: #ff6b6b;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .emergency-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .emergency-link {
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .emergency-link:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                padding: 15px;
+            }
+            
+            .logo {
+                margin-bottom: 15px;
+            }
+            
+            .nav-links {
+                width: 100%;
+                justify-content: space-around;
+                gap: 10px;
+            }
+            
+            .nav-links a span {
+                display: none;
+            }
+            
+            .contact-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <img src="https://img.icons8.com/ios/100/000000/melting-ice-cream.png" alt="Mental Health AI Logo"> 
+            <span>Mental Health AI</span>
+        </div>
+        
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}"><i class="fa-solid fa-house" aria-hidden="true" style="margin-right: 5px;"></i></i>Home</a>
+        </div>
+    </nav>
+
+    <!-- Contact Hero -->
+    <section class="contact-hero">
+        <div class="contact-hero-content">
+            <h1>We're Here to Help</h1>
+            <p>Reach out to our support team, share feedback, or ask questions about your mental health journey</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="contact-container">
+        <!-- Contact Method 1 -->
+        <div class="contact-method">
+            <div class="contact-icon">
+                <i class="fas fa-envelope"></i>
+            </div>
+            <h3>Email Us</h3>
+            <p>For general inquiries and support questions. We typically respond within 24 hours.</p>
+            <a href="mailto:support@mentalhealthai.com" class="contact-link">support@mentalhealthai.com</a>
+        </div>
+        
+        <!-- Contact Method 2 -->
+        <div class="contact-method">
+            <div class="contact-icon">
+                <i class="fas fa-comment-dots"></i>
+            </div>
+            <h3>Live Chat</h3>
+            <p>Chat with a real person during business hours (9am-5pm EST, Mon-Fri).</p>
+            <a href="#" id="liveChatBtn" class="contact-link">Start Live Chat</a>
+        </div>
+        
+        <!-- Contact Method 3 -->
+        <div class="contact-method">
+            <div class="contact-icon">
+                <i class="fas fa-phone-alt"></i>
+            </div>
+            <h3>Call Us</h3>
+            <p>For urgent account or technical issues. Available 10am-4pm EST weekdays.</p>
+            <a href="tel:+18005551234" class="contact-link">+1 (800) 555-1234</a>
+        </div>
+        
+        <!-- Contact Form -->
+        <div class="contact-form-container">
+            <h2><i class="fas fa-paper-plane"></i> Send Us a Message</h2>
+            
+            <form id="contactForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <select id="subject" name="subject" required>
+                        <option value="">Select a topic</option>
+                        <option value="support">Technical Support</option>
+                        <option value="feedback">Product Feedback</option>
+                        <option value="account">Account Help</option>
+                        <option value="therapy">Therapy Questions</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Your Message</label>
+                    <textarea id="message" name="message" required></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+        </div>
+        
+        <!-- Emergency Notice -->
+        <div class="emergency-notice">
+            <h3><i class="fas fa-exclamation-triangle"></i> Need Immediate Help?</h3>
+            <p>If you're in crisis or experiencing thoughts of self-harm, please contact these emergency resources:</p>
+            
+            <div class="emergency-links">
+                <a href="tel:988" class="emergency-link">
+                    <i class="fas fa-phone-alt"></i> 988 Suicide & Crisis Lifeline
+                </a>
+                <a href="https://www.crisistextline.org/" class="emergency-link" target="_blank">
+                    <i class="fas fa-sms"></i> Crisis Text Line
+                </a>
+                <a href="https://www.mentalhealth.gov/get-help/immediate-help" class="emergency-link" target="_blank">
+                    <i class="fas fa-globe-americas"></i> Emergency Resources
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Form Submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // In a real app, this would send to a server
+            const formData = new FormData(this);
+            const formValues = Object.fromEntries(formData.entries());
+            
+            console.log('Form submitted:', formValues);
+            
+            // Show success message
+            alert('Thank you for your message! Our team will respond within 24 hours.');
+            this.reset();
+        });
+        
+        // Live Chat Simulation
+        document.getElementById('liveChatBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const now = new Date();
+            const hours = now.getHours();
+            const isWeekday = now.getDay() >= 1 && now.getDay() <= 5;
+            
+            if (isWeekday && hours >= 9 && hours < 17) {
+                alert('Connecting you to a support agent...\n\nIn a real implementation, this would launch a live chat window.');
+            } else {
+                alert('Our live chat is available 9am-5pm EST, Monday-Friday.\n\nPlease email us or call during business hours.');
+            }
+        });
+    </script>
+</body>
+</html>
