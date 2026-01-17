@@ -1,9 +1,9 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_mysqldb import MySQL
 from werkzeug.security import generate_password_hash, check_password_hash
 import secrets
 from datetime import datetime
-from flask import session
 
 
 app = Flask(__name__)
@@ -12,8 +12,6 @@ app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret')
 
 # MySQL Configuration
-
-import os
 
 app.config['MYSQL_HOST'] = os.environ.get('DB_HOST')
 app.config['MYSQL_USER'] = os.environ.get('DB_USER')
@@ -78,8 +76,6 @@ def register():
     
     return render_template('register.html')
 
-from flask import request, render_template, redirect, url_for, flash, session
-from werkzeug.security import check_password_hash
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -359,8 +355,13 @@ def page_not_found(e):
 
 @app.errorhandler(500)
 def internal_error(e):
-    mysql.connection.rollback()
-    return render_template('500.html', user=get_current_user()), 500
+    try:
+        if mysql.connection:
+            mysql.connection.rollback()
+    except:
+        pass
+    return render_template('500.html'), 500
+
 
 if __name__ == "__main__":
     app.run()
