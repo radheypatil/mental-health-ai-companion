@@ -8,10 +8,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-# Generate a secure secret key
-app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret')
-
-# MySQL Configuration
+app.secret_key = os.environ.get("SECRET_KEY", "dev")
 
 app.config['MYSQL_HOST'] = os.environ.get('DB_HOST')
 app.config['MYSQL_USER'] = os.environ.get('DB_USER')
@@ -19,6 +16,8 @@ app.config['MYSQL_PASSWORD'] = os.environ.get('DB_PASSWORD')
 app.config['MYSQL_DB'] = os.environ.get('DB_NAME')
 app.config['MYSQL_PORT'] = int(os.environ.get('DB_PORT', 3306))
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+
+
 
 mysql = MySQL(app)
 
@@ -28,18 +27,32 @@ def inject_datetime():
     return {'datetime': datetime}
 
 # Database Helper Functions
+
+@app.route("/db-test")
+def db_test():
+    cur = mysql.connection.cursor()
+    cur.execute("SHOW TABLES")
+    tables = cur.fetchall()
+    return {"tables": tables}
+
+
 def execute_query(query, args=(), one=False, commit=False):
+    cur = None
     try:
         cur = mysql.connection.cursor()
         cur.execute(query, args)
         if commit:
             mysql.connection.commit()
         rv = cur.fetchall()
-        cur.close()
         return (rv[0] if rv else None) if one else rv
     except Exception as e:
-        mysql.connection.rollback()
+        if cur:
+            mysql.connection.rollback()
         raise e
+    finally:
+        if cur:
+            cur.close()
+
 
 def get_current_user():
     if 'user_id' in session:
@@ -355,12 +368,8 @@ def page_not_found(e):
 
 @app.errorhandler(500)
 def internal_error(e):
-    try:
-        if mysql.connection:
-            mysql.connection.rollback()
-    except:
-        pass
     return render_template('500.html'), 500
+
 
 
 if __name__ == "__main__":
