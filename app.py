@@ -9,7 +9,7 @@ from flask import session
 app = Flask(__name__)
 
 # Generate a secure secret key
-app.secret_key = secrets.token_hex(16)
+app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret')
 
 # MySQL Configuration
 
